@@ -33,6 +33,16 @@ void device_del (DEVICE * device)
 }
 
 
+void device_program_create (DEVICE * device, const char ** strings, const size_t * lengths)
+{
+  device->program = clCreateProgramWithSource (device->context,
+                                               1,
+                                               strings,
+                                               lengths,
+                                               &device->index);
+}
+
+
 cl_mem device_buffer_create (DEVICE * device, cl_mem_flags flags, cl_int size)
 {
   cl_mem device_A = clCreateBuffer (device->context,

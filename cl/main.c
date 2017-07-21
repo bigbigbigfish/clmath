@@ -14,6 +14,7 @@
 
 #define MAX_SOURCE_SIZE (0x100000)
 
+
 int main(void) 
 {
   // Create the two input vectors
@@ -30,24 +31,21 @@ int main(void)
   DEVICE * device = malloc(sizeof(DEVICE));
   device_create (device);
 
+  // copy data from host to device
   // Create memory buffers on the device for each vector
   cl_mem device_A = device_buffer_create (device, CL_MEM_READ_ONLY, LIST_SIZE * sizeof(int));
   cl_mem device_B = device_buffer_create (device, CL_MEM_READ_ONLY, LIST_SIZE * sizeof(int));
   cl_mem device_C = device_buffer_create (device, CL_MEM_WRITE_ONLY, LIST_SIZE * sizeof(int));
- 
   // Copy the lists A and B to their respective memory buffers
   device->index = device_buffer_write (device, device_A, LIST_SIZE * sizeof(int), host_A);
   device->index = device_buffer_write (device, device_B, LIST_SIZE * sizeof(int), host_B);
  
   // Create a program from the kernel source
-  cl_program program = clCreateProgramWithSource(device->context, 1, (const char **)&kernel_srcs, (const size_t *)&source_size, &device->index);
- 
+  device_program_create (device, (const char **)&kernel_srcs, (const size_t *)&source_size);
   // Build the program
-  device->index = clBuildProgram(program, 1, &device->uuid, NULL, NULL, NULL);
- 
+  device->index = clBuildProgram(device->program, 1, &device->uuid, NULL, NULL, NULL);
   // Create the OpenCL kernel
-  cl_kernel kernel = clCreateKernel(program, "vector_add", &device->index);
- 
+  cl_kernel kernel = clCreateKernel(device->program, "vector_add", &device->index);
   // Set the arguments of the kernel
   device->index = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&device_A);
   device->index = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void *)&device_B);
@@ -70,11 +68,10 @@ int main(void)
  
   // Clean up
   device->index = clReleaseKernel(kernel);
-  device->index = clReleaseProgram(program);
+  device->index = clReleaseProgram(device->program);
   device->index = clReleaseMemObject(device_A);
   device->index = clReleaseMemObject(device_B);
   device->index = clReleaseMemObject(device_C);
-
   device_del (device);
 
   free(host_A);
