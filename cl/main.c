@@ -6,12 +6,6 @@
 #include "include/devices/cl_device.h"
 
 
-#ifdef __APPLE__
-  #include <OpenCL/opencl.h>
-#else
-  #include <CL/cl.h>
-#endif
-
 #define MAX_SOURCE_SIZE (0x100000)
 
 
@@ -60,9 +54,9 @@ int main(void)
     printf("%d + %d = %d\n", host_A[i], host_B[i], host_C[i]);
  
   // Clean up
-  device->index = clReleaseMemObject(device_A);
-  device->index = clReleaseMemObject(device_B);
-  device->index = clReleaseMemObject(device_C);
+  device_buffer_del (device, device_A);
+  device_buffer_del (device, device_B);
+  device_buffer_del (device, device_C);
   device_del (device);
 
   free(host_A);
