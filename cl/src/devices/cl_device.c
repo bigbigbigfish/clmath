@@ -56,7 +56,22 @@ void device_kernel_create (DEVICE * device,
 
   device->kernel = clCreateKernel (device->program, 
                                    kernel_name, 
-                                   &device->index); 
+                                   &device->index);
+}
+
+
+void device_kernel_config (DEVICE * device, const size_t * global_work_size,
+                                            const size_t * local_work_size)
+{
+  device->index = clEnqueueNDRangeKernel (device->queue,
+                                          device->kernel,
+                                          1,
+                                          NULL,
+                                          global_work_size,
+                                          local_work_size,
+                                          0,
+                                          NULL,
+                                          NULL);
 }
 
 

@@ -34,6 +34,9 @@ int main(void)
   device_kernel_create (device, (const char **)&kernel_srcs, 
                                 (const size_t *)&source_size,
                                 "vector_add");
+  size_t global_item_size = LIST_SIZE;  // process the entire lists 
+  size_t local_item_size = 64;  // divide work items into groups of 64
+  device_kernel_config (device, &global_item_size, &local_item_size);
 
   // copy data from host to device
   // Create memory buffers on the device for each vector
@@ -49,10 +52,12 @@ int main(void)
   device_kernel_set (device, 2, sizeof(cl_mem), (void *)&device_C);
  
   // Execute the OpenCL kernel on the list
-  size_t global_item_size = LIST_SIZE; // Process the entire lists
-  size_t local_item_size = 64; // Divide work items into groups of 64
-  device->index = clEnqueueNDRangeKernel(device->queue, device->kernel, 1, NULL, 
-            &global_item_size, &local_item_size, 0, NULL, NULL);
+  // size_t global_item_size = LIST_SIZE; // Process the entire lists
+  // size_t local_item_size = 64; // Divide work items into groups of 64
+  // device->index = clEnqueueNDRangeKernel(device->queue, 
+  //                                        device->kernel, 
+  //                                        1, NULL, 
+  //           &global_item_size, &local_item_size, 0, NULL, NULL);
  
   // Read the memory buffer C on the device to the local variable C
   int * host_C = (int*)malloc(sizeof(int)*LIST_SIZE);
