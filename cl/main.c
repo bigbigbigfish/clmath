@@ -51,18 +51,9 @@ int main(void)
   device_kernel_set (device, 1, sizeof(cl_mem), (void *)&device_B);
   device_kernel_set (device, 2, sizeof(cl_mem), (void *)&device_C);
  
-  // Execute the OpenCL kernel on the list
-  // size_t global_item_size = LIST_SIZE; // Process the entire lists
-  // size_t local_item_size = 64; // Divide work items into groups of 64
-  // device->index = clEnqueueNDRangeKernel(device->queue, 
-  //                                        device->kernel, 
-  //                                        1, NULL, 
-  //           &global_item_size, &local_item_size, 0, NULL, NULL);
- 
   // Read the memory buffer C on the device to the local variable C
   int * host_C = (int*)malloc(sizeof(int)*LIST_SIZE);
-  device->index = clEnqueueReadBuffer(device->queue, device_C, CL_TRUE, 0, 
-            LIST_SIZE * sizeof(int), host_C, 0, NULL, NULL);
+  device_buffer_read (device, device_C, LIST_SIZE * sizeof(int), host_C);
  
   // Display the result to the screen
   for(int i = 0; i < LIST_SIZE; i++)

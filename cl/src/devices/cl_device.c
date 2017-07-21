@@ -110,3 +110,17 @@ cl_int device_buffer_write (DEVICE * device,
                                         NULL);
   return device->index;
 }
+
+
+cl_int device_buffer_read (DEVICE * device, cl_mem device_A, cl_int size, int * host_A)
+{
+  device->index = clEnqueueReadBuffer (device->queue,
+                                       device_A,
+                                       CL_TRUE,
+                                       0,
+                                       size,
+                                       host_A,
+                                       0,
+                                       NULL,
+                                       NULL);
+}
