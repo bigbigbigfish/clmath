@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "hosts/data.h"
-#include "hosts/filer.h"
+#include "include/hosts/data.h"
+#include "include/hosts/filer.h"
 #include "include/devices/cl_device.h"
 
 
@@ -25,7 +25,7 @@ int main(void)
  
   // Load the kernel source code into the array source_str
   char * kernel_srcs = (char*)malloc(MAX_SOURCE_SIZE);
-  size_t source_size = read_file ("cl/kernels/vector_add.cl", kernel_srcs, MAX_SOURCE_SIZE);
+  size_t source_size = read_file ("cl/src/kernels/vector_add.cl", kernel_srcs, MAX_SOURCE_SIZE);
  
   DEVICE * device = malloc(sizeof(DEVICE));
   create_device(device);
