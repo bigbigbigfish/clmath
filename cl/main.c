@@ -36,8 +36,8 @@ int main(void)
   cl_mem device_C = device_buffer_create (device, CL_MEM_WRITE_ONLY, LIST_SIZE * sizeof(int));
  
   // Copy the lists A and B to their respective memory buffers
-  device->index = clEnqueueWriteBuffer(device->queue, device_A, CL_TRUE, 0, LIST_SIZE * sizeof(int), host_A, 0, NULL, NULL);
-  device->index = clEnqueueWriteBuffer(device->queue, device_B, CL_TRUE, 0, LIST_SIZE * sizeof(int), host_B, 0, NULL, NULL);
+  device->index = device_buffer_write (device, device_A, LIST_SIZE * sizeof(int), host_A);
+  device->index = device_buffer_write (device, device_B, LIST_SIZE * sizeof(int), host_B);
  
   // Create a program from the kernel source
   cl_program program = clCreateProgramWithSource(device->context, 1, (const char **)&kernel_srcs, (const size_t *)&source_size, &device->index);

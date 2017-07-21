@@ -42,3 +42,21 @@ cl_mem device_buffer_create (DEVICE * device, cl_mem_flags flags, cl_int size)
                                     &device->index);
   return device_A;
 }
+
+
+cl_int device_buffer_write (DEVICE * device,
+                            cl_mem device_A, 
+                            cl_int size,
+                            int * host_A)
+{
+  device->index = clEnqueueWriteBuffer (device->queue,
+                                        device_A,
+                                        CL_TRUE,
+                                        0,
+                                        size,
+                                        host_A,
+                                        0,
+                                        NULL,
+                                        NULL);
+  return device->index;
+}
