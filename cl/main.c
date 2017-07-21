@@ -48,7 +48,6 @@ int main(void)
   device_buffer_del (device, device_A);
   device_buffer_del (device, device_B);
   device_buffer_del (device, device_C);
-
   engine_close (device);
   // clean up: host
   free(host_A);
