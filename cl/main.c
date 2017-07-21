@@ -21,7 +21,8 @@ int main(void)
   size_t global_item_size = LIST_SIZE;  // process the entire lists 
   size_t local_item_size = 64;  // divide work items into groups of 64
   char * kernelpath = "cl/src/kernels/vector_add.cl";
-  engine_start (device, &global_item_size, &local_item_size, kernelpath);
+  char * kernelname = "vector_add";
+  engine_start (device, &global_item_size, &local_item_size, kernelpath, kernelname);
 
 
   // copy data from host to device
@@ -47,7 +48,8 @@ int main(void)
   device_buffer_del (device, device_A);
   device_buffer_del (device, device_B);
   device_buffer_del (device, device_C);
-  device_del (device);
+
+  engine_close (device);
   // clean up: host
   free(host_A);
   free(host_B);
