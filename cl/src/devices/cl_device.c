@@ -60,6 +60,14 @@ void device_kernel_create (DEVICE * device,
 }
 
 
+void device_kernel_set (DEVICE * device, cl_uint arg_index,
+                                         size_t arg_size,
+                                         const void * arg_value)
+{
+  device->index = clSetKernelArg (device->kernel, arg_index, arg_size, arg_value);
+}
+
+
 cl_mem device_buffer_create (DEVICE * device, cl_mem_flags flags, cl_int size)
 {
   cl_mem device_A = clCreateBuffer (device->context,

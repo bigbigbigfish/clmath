@@ -30,6 +30,10 @@ int main(void)
  
   DEVICE * device = malloc(sizeof(DEVICE));
   device_create (device);
+  // create kernel program in the device 
+  device_kernel_create (device, (const char **)&kernel_srcs, 
+                                (const size_t *)&source_size,
+                                "vector_add");
 
   // copy data from host to device
   // Create memory buffers on the device for each vector
@@ -39,15 +43,10 @@ int main(void)
   // Copy the lists A and B to their respective memory buffers
   device->index = device_buffer_write (device, device_A, LIST_SIZE * sizeof(int), host_A);
   device->index = device_buffer_write (device, device_B, LIST_SIZE * sizeof(int), host_B);
-
-  // create kernel program in the device 
-  device_kernel_create (device, (const char **)&kernel_srcs, 
-                                (const size_t *)&source_size,
-                                "vector_add");
   // Set the arguments of the kernel
-  device->index = clSetKernelArg(device->kernel, 0, sizeof(cl_mem), (void *)&device_A);
-  device->index = clSetKernelArg(device->kernel, 1, sizeof(cl_mem), (void *)&device_B);
-  device->index = clSetKernelArg(device->kernel, 2, sizeof(cl_mem), (void *)&device_C);
+  device_kernel_set (device, 0, sizeof(cl_mem), (void *)&device_A);
+  device_kernel_set (device, 1, sizeof(cl_mem), (void *)&device_B);
+  device_kernel_set (device, 2, sizeof(cl_mem), (void *)&device_C);
  
   // Execute the OpenCL kernel on the list
   size_t global_item_size = LIST_SIZE; // Process the entire lists
