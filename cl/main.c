@@ -3,7 +3,7 @@
 
 #include "hosts/data.h"
 #include "hosts/filer.h"
-#include "devices/cl_device.h"
+#include "include/devices/cl_device.h"
 
 
 #ifdef __APPLE__
@@ -29,7 +29,6 @@ int main(void)
  
   DEVICE * device = malloc(sizeof(DEVICE));
   create_device(device);
-  printf ("%d, %d, \n", device->index, device->uuid);
 
   // Create memory buffers on the device for each vector 
   cl_mem a_mem_obj = clCreateBuffer(device->context, CL_MEM_READ_ONLY, LIST_SIZE * sizeof(int), NULL, &device->index);

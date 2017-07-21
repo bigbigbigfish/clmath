@@ -1,17 +1,4 @@
-#ifdef __APPLE__
-  #include <OpenCL/opencl.h>
-#else
-  #include <CL/cl.h>
-#endif
-
-
-typedef struct
-{
-  cl_int index;
-  cl_device_id uuid;
-  cl_context context;
-  cl_command_queue queue;
-} DEVICE;
+#include "../include/devices/cl_device.h"
 
 
 void create_device (DEVICE * device)
