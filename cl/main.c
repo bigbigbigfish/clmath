@@ -68,7 +68,6 @@ int main(void)
  
   // Clean up
   device->index = clReleaseKernel(kernel);
-  device->index = clReleaseProgram(device->program);
   device->index = clReleaseMemObject(device_A);
   device->index = clReleaseMemObject(device_B);
   device->index = clReleaseMemObject(device_C);

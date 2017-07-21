@@ -26,6 +26,8 @@ void device_create (DEVICE * device)
 
 void device_del (DEVICE * device)
 {
+  device->index = clReleaseProgram (device->program);
+
   device->index = clFlush (device->queue);
   device->index = clFinish (device->queue);
   device->index = clReleaseCommandQueue (device->queue);
