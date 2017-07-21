@@ -1,4 +1,4 @@
-#include "../include/devices/cl_device.h"
+#include "../../include/devices/cl_device.h"
 
 
 void create_device (DEVICE * device)
