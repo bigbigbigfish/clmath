@@ -39,22 +39,20 @@ int main(void)
   // Copy the lists A and B to their respective memory buffers
   device->index = device_buffer_write (device, device_A, LIST_SIZE * sizeof(int), host_A);
   device->index = device_buffer_write (device, device_B, LIST_SIZE * sizeof(int), host_B);
- 
-  // Create a program from the kernel source
-  device_program_create (device, (const char **)&kernel_srcs, (const size_t *)&source_size);
-  // Build the program
-  device->index = clBuildProgram(device->program, 1, &device->uuid, NULL, NULL, NULL);
-  // Create the OpenCL kernel
-  cl_kernel kernel = clCreateKernel(device->program, "vector_add", &device->index);
+
+  // create kernel program in the device 
+  device_kernel_create (device, (const char **)&kernel_srcs, 
+                                (const size_t *)&source_size,
+                                "vector_add");
   // Set the arguments of the kernel
-  device->index = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&device_A);
-  device->index = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void *)&device_B);
-  device->index = clSetKernelArg(kernel, 2, sizeof(cl_mem), (void *)&device_C);
+  device->index = clSetKernelArg(device->kernel, 0, sizeof(cl_mem), (void *)&device_A);
+  device->index = clSetKernelArg(device->kernel, 1, sizeof(cl_mem), (void *)&device_B);
+  device->index = clSetKernelArg(device->kernel, 2, sizeof(cl_mem), (void *)&device_C);
  
   // Execute the OpenCL kernel on the list
   size_t global_item_size = LIST_SIZE; // Process the entire lists
   size_t local_item_size = 64; // Divide work items into groups of 64
-  device->index = clEnqueueNDRangeKernel(device->queue, kernel, 1, NULL, 
+  device->index = clEnqueueNDRangeKernel(device->queue, device->kernel, 1, NULL, 
             &global_item_size, &local_item_size, 0, NULL, NULL);
  
   // Read the memory buffer C on the device to the local variable C
@@ -67,7 +65,6 @@ int main(void)
     printf("%d + %d = %d\n", host_A[i], host_B[i], host_C[i]);
  
   // Clean up
-  device->index = clReleaseKernel(kernel);
   device->index = clReleaseMemObject(device_A);
   device->index = clReleaseMemObject(device_B);
   device->index = clReleaseMemObject(device_C);

@@ -26,6 +26,7 @@ void device_create (DEVICE * device)
 
 void device_del (DEVICE * device)
 {
+  device->index = clReleaseKernel (device->kernel);
   device->index = clReleaseProgram (device->program);
 
   device->index = clFlush (device->queue);
@@ -35,13 +36,27 @@ void device_del (DEVICE * device)
 }
 
 
-void device_program_create (DEVICE * device, const char ** strings, const size_t * lengths)
+void device_kernel_create (DEVICE * device, 
+                           const char ** strings, 
+                           const size_t * lengths,
+                           const char * kernel_name)
 {
   device->program = clCreateProgramWithSource (device->context,
                                                1,
                                                strings,
                                                lengths,
                                                &device->index);
+
+  device->index = clBuildProgram (device->program,
+                                  1,
+                                  &device->uuid,
+                                  NULL,
+                                  NULL,
+                                  NULL);
+
+  device->kernel = clCreateKernel (device->program, 
+                                   kernel_name, 
+                                   &device->index); 
 }
 
 
