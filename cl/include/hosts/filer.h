@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+
 
 size_t read_file (char * filepath, char * srcs, size_t src_max_size)
 {
