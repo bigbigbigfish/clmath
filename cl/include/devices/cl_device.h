@@ -17,8 +17,9 @@ typedef struct
 } DEVICE;
 
 
-void create_device (DEVICE * device);
-void del_device (DEVICE * device);
+void device_create (DEVICE * device);
+void device_del (DEVICE * device);
 
+cl_mem device_buffer_create (DEVICE * device, cl_mem_flags flags, cl_int size);
 
 #endif

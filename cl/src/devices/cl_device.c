@@ -1,7 +1,7 @@
 #include "../../include/devices/cl_device.h"
 
 
-void create_device (DEVICE * device)
+void device_create (DEVICE * device)
 {
   // get platforms
   cl_platform_id platform_id = NULL;
@@ -24,7 +24,7 @@ void create_device (DEVICE * device)
 }
 
 
-void del_device (DEVICE * device)
+void device_del (DEVICE * device)
 {
   device->index = clFlush (device->queue);
   device->index = clFinish (device->queue);
@@ -32,3 +32,13 @@ void del_device (DEVICE * device)
   device->index = clReleaseContext (device->context);
 }
 
+
+cl_mem device_buffer_create (DEVICE * device, cl_mem_flags flags, cl_int size)
+{
+  cl_mem device_A = clCreateBuffer (device->context,
+                                    flags,
+                                    size,
+                                    NULL,
+                                    &device->index);
+  return device_A;
+}
