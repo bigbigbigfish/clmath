@@ -18,7 +18,8 @@ init:
 	mkdir $(BUILD_DIR)
 
 install:
-	sudo apt-get install opencl-headers nvidia-opencl-dev nvidia-modprobe
+	# config opencl: https://streamhpc.com/blog/2011-06-24/install-opencl-on-debianubuntu-orderly/
+	sudo apt-get install opencl-headers
 
 compile:
 	gcc $(CC_OPTS) $(PROJECT_DIR)/main.c $(PROJECT_SOURCES) -I $(PROJECT_HEADERS) -o $(BUILD_DIR)/main -lOpenCL
