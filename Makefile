@@ -18,7 +18,7 @@ init:
 	mkdir $(BUILD_DIR)
 
 install:
-	sudo apt-get install opencl-headers
+	sudo apt-get install opencl-headers nvidia-opencl-dev nvidia-modprobe
 
 compile:
 	gcc $(CC_OPTS) $(PROJECT_DIR)/main.c $(PROJECT_SOURCES) -I $(PROJECT_HEADERS) -o $(BUILD_DIR)/main -lOpenCL

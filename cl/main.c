@@ -30,10 +30,10 @@ int main(void)
   cl_mem device_A = device_buffer_create (device, CL_MEM_READ_ONLY, LIST_SIZE * sizeof(int));
   cl_mem device_B = device_buffer_create (device, CL_MEM_READ_ONLY, LIST_SIZE * sizeof(int));
   cl_mem device_C = device_buffer_create (device, CL_MEM_WRITE_ONLY, LIST_SIZE * sizeof(int));
-  // Copy the lists A and B to their respective memory buffers
+  // copy the lists A and B to their respective memory buffers
   device->index = device_buffer_write (device, device_A, LIST_SIZE * sizeof(int), host_A);
   device->index = device_buffer_write (device, device_B, LIST_SIZE * sizeof(int), host_B);
-  // Set the arguments of the kernel
+  // set the arguments of the kernel
   device_kernel_set (device, 0, sizeof(cl_mem), (void *)&device_A);
   device_kernel_set (device, 1, sizeof(cl_mem), (void *)&device_B);
   device_kernel_set (device, 2, sizeof(cl_mem), (void *)&device_C);
@@ -49,6 +49,7 @@ int main(void)
   device_buffer_del (device, device_B);
   device_buffer_del (device, device_C);
   engine_close (device);
+
   // clean up: host
   free(host_A);
   free(host_B);
