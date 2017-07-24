@@ -9,3 +9,5 @@ Getting Started
 ::
 
     $ make compile
+
+opencl for intel: https://gist.github.com/rmcgibbo/6314452
