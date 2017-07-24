@@ -6,8 +6,20 @@ CL
 Getting Started
 ==============================================================================
 
+Prequisites
+
+::
+
+    1. install intel opencl sdk
+       - ref: https://gist.github.com/rmcgibbo/6314452
+
+    2. install nvidia cuda
+
+    3. run `make platforms`
+
+Compiling
+
 ::
 
     $ make compile
 
-opencl for intel: https://gist.github.com/rmcgibbo/6314452
