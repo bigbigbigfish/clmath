@@ -20,7 +20,7 @@ init:
 	mkdir $(BUILD_DIR)
 
 compile:
-	gcc $(CC_OPTS) $(PROJECT_DIR)/main.c $(PROJECT_SOURCES) -I $(PROJECT_HEADERS) -o $(BUILD_DIR)/main -lOpenCL
+	gcc $(CC_OPTS) $(PROJECT_DIR)/tests/main.c $(PROJECT_SOURCES) -I $(PROJECT_HEADERS) -o $(BUILD_DIR)/main -lOpenCL
 	./$(BUILD_DIR)/main
 
 

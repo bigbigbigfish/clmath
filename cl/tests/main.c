@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "include/hosts/data.h"
-#include "include/devices/cl_device.h"
-#include "include/devices/cl_engine.h"
+#include "../include/hosts/data.h"
+#include "../include/devices/cl_device.h"
+#include "../include/devices/cl_engine.h"
 
 
 int main(void) 
