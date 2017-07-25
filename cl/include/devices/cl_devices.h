@@ -28,6 +28,25 @@ typedef struct
   cl_bool error_correction_support;
   cl_device_local_mem_type local_mem_type;
   cl_ulong local_mem_size;
+  cl_ulong max_constant_buffer_size;
+
+  cl_command_queue_properties queue_properties;
+  cl_bool image_support;
+  cl_uint max_read_image_args;
+  cl_uint max_write_image_args;
+  // CL_DEVICE_IMAGE2D_MAX_WIDTH
+  // CL_DEVICE_IMAGE2D_MAX_HEIGHT
+  // CL_DEVICE_IMAGE3D_MAX_WIDTH
+  // CL_DEVICE_IMAGE3D_MAX_HEIGHT
+  // CL_DEVICE_IMAGE3D_MAX_DEPTH
+  size_t sz_max_dims[5];
+  // CL_DEVICE_VECTOR_WIDTH_CHAR
+  // CL_DEVICE_VECTOR_WIDTH_SHORT
+  // CL_DEVICE_VECTOR_WIDTH_INT
+  // CL_DEVICE_VECTOR_WIDTH_LONG
+  // CL_DEVICE_VECTOR_WIDTH_FLOAT
+  // CL_DEVICE_VECTOR_WIDTH_DOUBLE
+  cl_uint vec_width[6];
 } DEVICE;
 
 cl_platform_id * platforms_summary (void); 

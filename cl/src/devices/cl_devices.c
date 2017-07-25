@@ -146,6 +146,22 @@ DEVICE get_device_info (cl_device_id id)
   clGetDeviceInfo (id, CL_DEVICE_ERROR_CORRECTION_SUPPORT, sizeof(device.error_correction_support), &device.error_correction_support, NULL);
   clGetDeviceInfo (id, CL_DEVICE_LOCAL_MEM_TYPE, sizeof(device.local_mem_type), &device.local_mem_type, NULL);
   clGetDeviceInfo (id, CL_DEVICE_LOCAL_MEM_SIZE, sizeof(device.local_mem_size), &device.local_mem_size, NULL);
+  clGetDeviceInfo (id, CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE, sizeof(device.max_constant_buffer_size), &device.max_constant_buffer_size, NULL);
+  clGetDeviceInfo (id, CL_DEVICE_QUEUE_PROPERTIES, sizeof(device.queue_properties), &device.queue_properties, NULL);
+  clGetDeviceInfo (id, CL_DEVICE_IMAGE_SUPPORT, sizeof(device.image_support), &device.image_support, NULL);
+  clGetDeviceInfo (id, CL_DEVICE_MAX_READ_IMAGE_ARGS, sizeof(device.max_read_image_args), &device.max_read_image_args, NULL);
+  clGetDeviceInfo (id, CL_DEVICE_MAX_WRITE_IMAGE_ARGS, sizeof(device.max_write_image_args), &device.max_write_image_args, NULL);
+  clGetDeviceInfo (id, CL_DEVICE_IMAGE2D_MAX_WIDTH, sizeof(size_t), &device.sz_max_dims[0], NULL);
+  clGetDeviceInfo (id, CL_DEVICE_IMAGE2D_MAX_HEIGHT, sizeof(size_t), &device.sz_max_dims[1], NULL);
+  clGetDeviceInfo (id, CL_DEVICE_IMAGE3D_MAX_WIDTH, sizeof(size_t), &device.sz_max_dims[2], NULL);
+  clGetDeviceInfo (id, CL_DEVICE_IMAGE3D_MAX_HEIGHT, sizeof(size_t), &device.sz_max_dims[3], NULL);
+  clGetDeviceInfo (id, CL_DEVICE_IMAGE3D_MAX_DEPTH, sizeof(size_t), &device.sz_max_dims[4], NULL);
+  clGetDeviceInfo (id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_CHAR, sizeof(cl_uint), &device.vec_width[0], NULL);
+  clGetDeviceInfo (id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_SHORT, sizeof(cl_uint), &device.vec_width[1], NULL);
+  clGetDeviceInfo (id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_INT, sizeof(cl_uint), &device.vec_width[2], NULL);
+  clGetDeviceInfo (id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_LONG, sizeof(cl_uint), &device.vec_width[3], NULL);
+  clGetDeviceInfo (id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT, sizeof(cl_uint), &device.vec_width[4], NULL);
+  clGetDeviceInfo (id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE, sizeof(cl_uint), &device.vec_width[5], NULL);
   
   printf ("\t CL_DEVICE_NAME: \t%s\n", device.name);
   printf ("\t CL_DEVICE_VENDOR: \t%s\n", device.vendor);
@@ -169,7 +185,20 @@ DEVICE get_device_info (cl_device_id id)
   printf ("\t CL_DEVICE_ERROR_CORRECTION_SUPPORT: \t%s\n", device.error_correction_support == CL_TRUE ? "yes" : "no");
   printf ("\t CL_DEVICE_LOCAL_MEM_TYPE: \t%s\n", device.local_mem_type == 1 ? "local" : "global");
   printf ("\t CL_DEVICE_LOCAL_MEM_SIZE: \t%u KByte\n", (unsigned int)(device.local_mem_size/1024));
-  
+  printf ("\t CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE: \t%u KByte\n", (unsigned int)(device.max_constant_buffer_size/1024));
+  if (device.queue_properties & CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE)
+    printf ("\t CL_DEVICE_QUEUE_PROPERTIES: \t%s\n", "CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE");
+  if (device.queue_properties & CL_QUEUE_PROFILING_ENABLE)
+    printf ("\t CL_DEVICE_QUEUE_PROPERTIES: \t%s\n", "CL_QUEUE_PROFILING_ENABLE"); 
+    printf ("\t CL_DEVICE_IMAGE_SUPPORT: \t%u\n", device.image_support); 
+    printf ("\t CL_DEVICE_MAX_READ_IMAGE_ARGS: \t%u\n", device.max_read_image_args); 
+    printf ("\t CL_DEVICE_MAX_WRITE_IMAGE_ARGS: \t%u\n", device.max_write_image_args); 
+    printf ("\t CL_DEVICE_IMAGE2D_MAX_WIDTH: \t%u\n", device.sz_max_dims[0]); 
+    printf ("\t CL_DEVICE_IMAGE2D_MAX_HEIGHT: \t%u\n", device.sz_max_dims[1]); 
+    printf ("\t CL_DEVICE_IMAGE3D_MAX_WIDTH: \t%u\n", device.sz_max_dims[2]); 
+    printf ("\t CL_DEVICE_IMAGE3D_MAX_HEIGHT: \t%u\n", device.sz_max_dims[3]); 
+    printf ("\t CL_DEVICE_IMAGE3D_MAX_DEPTH: \t%u\n", device.sz_max_dims[4]); 
+    printf ("\t CL_DEVICE_PREFERRED_VECTOR_WIDTH (CHAR, SHORT, INT, LONG, FLOAT, DOUBLE: \t%u, %u, %u, %u, %u\n", device.vec_width[0], device.vec_width[1], device.vec_width[2], device.vec_width[3], device.vec_width[4], device.vec_width[5]); 
 
   return device;
    
