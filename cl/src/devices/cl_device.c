@@ -7,7 +7,6 @@ void device_create (DEVICE * device)
   cl_platform_id platform_id = NULL;
   cl_uint num_platforms;
   cl_int platform = clGetPlatformIDs (1, &platform_id, &num_platforms);
-  
  
   // get device
   device->uuid = NULL;
