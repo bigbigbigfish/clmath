@@ -53,8 +53,9 @@ typedef struct
 cl_platform_id * platforms_summary (void); 
 cl_device_id * devices_summary (cl_platform_id platform_id);
 DEVICE get_device_info (cl_device_id id);
-void print_device_info (DEVICE device);
 
+
+void print_device_info (DEVICE device);
 void system_info (void);
 
 #endif

@@ -27,6 +27,8 @@ int main ()
   print_device_info (nvidia_device_0);
   DEVICE nvidia_device_1 = get_device_info (nvidia_device_ids[1]);
   print_device_info (nvidia_device_1);
+
+  // system info
   system_info ();
 
   free (platform_ids);
