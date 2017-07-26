@@ -34,8 +34,12 @@ vector:
 	./$(BUILD_DIR)/test_vector_add 
 
 
-devices:
+devices_cpu:
 	$(CC) $(CC_OPTS) $(PROJECT_DIR)/tests/test_devices.c $(PROJECT_SOURCES) -I $(PROJECT_HEADERS) -I $(CL_CPU) -o $(BUILD_DIR)/test_devices $(CC_DFLAGS)
+	./$(BUILD_DIR)/test_devices
+
+devices_gpu:
+	$(CC) $(CC_OPTS) $(PROJECT_DIR)/tests/test_devices.c $(PROJECT_SOURCES) -I $(PROJECT_HEADERS) -I $(CL_GPU) -o $(BUILD_DIR)/test_devices $(CC_DFLAGS)
 	./$(BUILD_DIR)/test_devices
 
 platforms:

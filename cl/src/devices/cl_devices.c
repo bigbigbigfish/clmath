@@ -162,7 +162,14 @@ DEVICE get_device_info (cl_device_id id)
   clGetDeviceInfo (id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_LONG, sizeof(cl_uint), &device.vec_width[3], NULL);
   clGetDeviceInfo (id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT, sizeof(cl_uint), &device.vec_width[4], NULL);
   clGetDeviceInfo (id, CL_DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE, sizeof(cl_uint), &device.vec_width[5], NULL);
-  
+ 
+  return device;
+}
+
+
+void print_device_info (DEVICE device)
+{
+ 
   printf ("\t CL_DEVICE_NAME: \t%s\n", device.name);
   printf ("\t CL_DEVICE_VENDOR: \t%s\n", device.vendor);
   printf ("\t CL_DRIVER_VERSION: \t%s\n", device.driver_version);
@@ -198,10 +205,8 @@ DEVICE get_device_info (cl_device_id id)
     printf ("\t CL_DEVICE_IMAGE3D_MAX_WIDTH: \t%u\n", device.sz_max_dims[2]); 
     printf ("\t CL_DEVICE_IMAGE3D_MAX_HEIGHT: \t%u\n", device.sz_max_dims[3]); 
     printf ("\t CL_DEVICE_IMAGE3D_MAX_DEPTH: \t%u\n", device.sz_max_dims[4]); 
-    printf ("\t CL_DEVICE_PREFERRED_VECTOR_WIDTH (CHAR, SHORT, INT, LONG, FLOAT, DOUBLE: \t%u, %u, %u, %u, %u\n", device.vec_width[0], device.vec_width[1], device.vec_width[2], device.vec_width[3], device.vec_width[4], device.vec_width[5]); 
+    printf ("\t CL_DEVICE_PREFERRED_VECTOR_WIDTH (CHAR, SHORT, INT, LONG, FLOAT, DOUBLE): \t%u, %u, %u, %u, %u\n", device.vec_width[0], device.vec_width[1], device.vec_width[2], device.vec_width[3], device.vec_width[4], device.vec_width[5]); 
 
-  return device;
-   
 }
 
 
