@@ -1,3 +1,6 @@
+/*
+ * C = A + B
+ */
 __kernel void vector_add (__global float * A,
                           __global float * B,
                           __global float * C,
@@ -9,7 +12,9 @@ __kernel void vector_add (__global float * A,
 }
 
 
-
+/*
+ * D = A + B + C
+ */
 __kernel void vector_add_plus (__global float * A,
                                __global float * B,
                                __global float * C,

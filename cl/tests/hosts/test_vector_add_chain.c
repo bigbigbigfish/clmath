@@ -8,6 +8,7 @@
 #include <CL/cl.h>
 #endif
 
+#include "cl/utils/file_handler.h"
 #include "cl/devices/cl_errors.h"
 
 //pick up device type from compiler command line or from
@@ -23,29 +24,6 @@
 #define TOL    (0.001)   // tolerance used in floating point comparisons
 #define LENGTH (1024)    // length of vectors a, b, and c
 
-//------------------------------------------------------------------------------
-//
-// kernel:  vadd
-//
-// Purpose: Compute the elementwise sum c = a+b
-//
-// input: a and b float vectors of length count
-//
-// output: c float vector of length count holding the sum a + b
-//
-
-const char *KernelSource = "\n" \
-"__kernel void vadd(                                                 \n" \
-"   __global float* a,                                                  \n" \
-"   __global float* b,                                                  \n" \
-"   __global float* c,                                                  \n" \
-"   const unsigned int count)                                           \n" \
-"{                                                                      \n" \
-"   int i = get_global_id(0);                                           \n" \
-"   if(i < count)                                                       \n" \
-"       c[i] = a[i] + b[i];                                             \n" \
-"}                                                                      \n" \
-"\n";
 
 //------------------------------------------------------------------------------
 
@@ -132,7 +110,8 @@ int main(int argc, char** argv)
     checkError(err, "Creating command queue");
 
     // Create the compute program from the source buffer
-    program = clCreateProgramWithSource(context, 1, (const char **) & KernelSource, NULL, &err);
+    char * kernel_srcs = file_read ("cl/src/kernels/vector_add.cl");
+    program = clCreateProgramWithSource(context, 1, (const char **) &kernel_srcs, NULL, &err);
     checkError(err, "Creating program");
 
     // Build the program  
@@ -149,7 +128,7 @@ int main(int argc, char** argv)
     }
 
     // Create the compute kernel from the program 
-    ko_vadd = clCreateKernel(program, "vadd", &err);
+    ko_vadd = clCreateKernel(program, "vector_add", &err);
     checkError(err, "Creating kernel");
 
     // Create the input (a, b, e, g) arrays in device memory
