@@ -28,5 +28,5 @@ $(BUILD_HOSTS_DIR)/$(LIB_HOSTS) : $(HOSTS_OBJECTS)
 
 $(BUILD_HOSTS_DIR)/%.o : $(HOSTS_SOURCES_DIR)/%.c 
 	@echo "$(RED)Compiling $< $(NC)"
-	$(CC) $(CC_FLAGS) -c $< -o $@ 
+	$(CC) $(CC_CFLAGS) -c $< -o $@ 
 

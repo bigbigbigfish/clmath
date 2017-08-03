@@ -2,7 +2,7 @@
 #include "cl/devices/cl_engines.h"
 
 
-void engine_init (engine * t)
+void engine_init (engine * t, char * kernel_srcs)
 {
   cl_int status;
 
@@ -11,6 +11,32 @@ void engine_init (engine * t)
 
   t->commands = clCreateCommandQueue (t->context, t->device_id, 0, &status);
   checkError (status, "Creating command queue");
+
+  t->program = clCreateProgramWithSource (t->context, 1, (const char**)&kernel_srcs, NULL, &status);
+  checkError (status, "Creating program");
+
+  // build program
+  status = clBuildProgram (t->program, 0, NULL, NULL, NULL, NULL);
+  if (status != CL_SUCCESS)
+  {
+    size_t len;
+    char buffer[2048];
+
+    printf ("Error: Failed to build program executable (%s)!\n", err_code(status));
+    clGetProgramBuildInfo (t->program, t->device_id, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &len);
+    printf ("%s\n", buffer);
+
+    return EXIT_FAILURE;
+  }
+}
+
+
+void engine_compute (engine * t, char * kernel_name)
+{
+  cl_int status;
+
+  t->kernel = clCreateKernel (t->program, kernel_name, &status);
+  checkError (status, "Creating kernel");
 }
 
 

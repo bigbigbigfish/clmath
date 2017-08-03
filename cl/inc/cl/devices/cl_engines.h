@@ -20,7 +20,9 @@ typedef struct
 } engine;
 
 
-void engine_init (engine * t);
+void engine_init (engine * t, char * kernel_srcs);
+void engine_compute (engine * t, char * kernel_name);
 void engine_cleanup (engine * t);
+
 
 #endif
