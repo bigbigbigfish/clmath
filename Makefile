@@ -3,22 +3,18 @@
 PROJECT_DIR = cl
 BUILD_DIR = _build
 
-MODULE_DEVICES = devices
-MODULE_HOSTS = hosts
-
+# main folders
 HEADERS_DIR = $(PROJECT_DIR)/inc
-
 SOURCES_DIR = $(PROJECT_DIR)/src
-
 TESTS_DIR = $(PROJECT_DIR)/tests
-TESTS_DEVICES_DIR = $(TESTS_DIR)/$(MODULE_DEVICES)
-TESTS_HOSTS_DIR = $(TESTS_DIR)/$(MODULE_HOSTS)
 
+# build
 BUILD_SOURCES_DIR = $(BUILD_DIR)/src
 BUILD_TESTS_DIR = $(BUILD_DIR)/tests
-BUILD_TESTS_DEVICES_DIR = $(BUILD_TESTS_DIR)/$(MODULE_DEVICES)
-BUILD_TESTS_HOSTS_DIR = $(BUILD_TESTS_DIR)/$(MODULE_HOSTS)
 
+# modules
+MODULE_DEVICES = devices
+MODULE_HOSTS = hosts
 
 # ------------------------------------------------------------------------------------------------
 # compiler
@@ -28,6 +24,8 @@ CC_OPTS = -std=c99 -O3
 CC_DFLAGS = -lOpenCL
 CL_CPU = -I/opt/intel/intel-opencl-1.2-6.3.0.1904/opencl-1.2-sdk-6.3.0.1904/include
 CL_GPU = -I/usr/local/cuda-8.0/include
+
+CC_FLAGS = $(CC_OPTS) $(CL_GPU) -I$(HEADERS_DIR) $(CC_DFLAGS)
 
 # ------------------------------------------------------------------------------------------------
 # console
@@ -42,7 +40,11 @@ NC = \033[1;0m
 # ------------------------------------------------------------------------------------------------
 # includes
 
+include makefiles/devices.make
+include makefiles/hosts.make
 include makefiles/tests.make
+
+libs: $(BUILD_DEVICES_DIR)/$(LIB_DEVICES)  
 
 # ------------------------------------------------------------------------------------------------
 # 
@@ -50,11 +52,13 @@ include makefiles/tests.make
 build:
 	mkdir $(BUILD_DIR)
 	mkdir $(BUILD_SOURCES_DIR)
+	mkdir $(BUILD_DEVICES_DIR)
+	mkdir $(BUILD_HOSTS_DIR)
 	mkdir $(BUILD_TESTS_DIR)
 	mkdir $(BUILD_TESTS_DEVICES_DIR)
 	mkdir $(BUILD_TESTS_HOSTS_DIR)
 
-all:
+all: libs tests
 
 
 tests: run_tests_devices run_tests_hosts

@@ -1,14 +1,14 @@
 # ------------------------------------------------------------------------------------------------
 # directories
 
+# sources_dir
+TESTS_DEVICES_DIR = $(TESTS_DIR)/$(MODULE_DEVICES)
+TESTS_HOSTS_DIR = $(TESTS_DIR)/$(MODULE_HOSTS)
 
+# build_dir
+BUILD_TESTS_DEVICES_DIR = $(BUILD_TESTS_DIR)/$(MODULE_DEVICES)
+BUILD_TESTS_HOSTS_DIR = $(BUILD_TESTS_DIR)/$(MODULE_HOSTS)
 
-# ------------------------------------------------------------------------------------------------
-# compilcation
-
-
-TESTS_CFLAGS = $(CC_OPTS) $(CL_GPU) 
-TESTS_LFLAGS = $(CC_DFLAGS)
 
 # ------------------------------------------------------------------------------------------------
 # sources
@@ -32,11 +32,11 @@ tests_devices: $(TESTS_DEVICES_TARGETS)
 # devices
 $(BUILD_TESTS_DEVICES_DIR)/% : $(BUILD_TESTS_DEVICES_DIR)/%.o
 	@echo "$(RED)Linking $@ $(NC)"
-	$(CC) -o $@ $^ $(TESTS_LFLAGS)
+	$(CC) -o $@ $^ $(CC_FLAGS)
 
 $(BUILD_TESTS_DEVICES_DIR)/%.o : $(TESTS_DEVICES_DIR)/%.c
 	@echo "$(RED)Compiling $< $(NC)"
-	$(CC) -c $< -o $@ $(TESTS_CFLAGS)
+	$(CC) -c $< -o $@ $(CC_FLAGS)
 
 # ------------------------------------------------------------------------------------------------
 # complication: tests_hosts
@@ -46,11 +46,11 @@ tests_hosts: $(TESTS_HOSTS_TARGETS)
 # hosts
 $(BUILD_TESTS_HOSTS_DIR)/% : $(BUILD_TESTS_HOSTS_DIR)/%.o
 	@echo "$(RED)Linking $@ $(NC)"
-	$(CC) -o $@ $^ $(TESTS_LFLAGS)
+	$(CC) -o $@ $^ $(CC_FLAGS)
 
 $(BUILD_TESTS_HOSTS_DIR)/%.o : $(TESTS_HOSTS_DIR)/%.c
 	@echo "$(RED)Compiling $< $(NC)"
-	$(CC) -c $< -o $@ $(TESTS_CFLAGS)
+	$(CC) -c $< -o $@ $(CC_FLAGS)
 
 
 # ------------------------------------------------------------------------------------------------
