@@ -15,6 +15,7 @@ BUILD_TESTS_DIR = $(BUILD_DIR)/tests
 # modules
 MODULE_DEVICES = devices
 MODULE_HOSTS = hosts
+MODULE_UTILS = utils
 
 # ------------------------------------------------------------------------------------------------
 # compiler
@@ -40,11 +41,12 @@ NC = \033[1;0m
 # ------------------------------------------------------------------------------------------------
 # includes
 
+include makefiles/utils.make
 include makefiles/devices.make
 include makefiles/hosts.make
 include makefiles/tests.make
 
-libs: $(BUILD_DEVICES_DIR)/$(LIB_DEVICES)  
+libs: $(BUILD_UTILS_DIR)/$(LIB_UTILS) $(BUILD_DEVICES_DIR)/$(LIB_DEVICES) $(BUILD_HOSTS_DIR)/$(LIB_HOSTS) 
 
 # ------------------------------------------------------------------------------------------------
 # 
@@ -52,9 +54,11 @@ libs: $(BUILD_DEVICES_DIR)/$(LIB_DEVICES)
 build:
 	mkdir $(BUILD_DIR)
 	mkdir $(BUILD_SOURCES_DIR)
+	mkdir $(BUILD_UTILS_DIR)
 	mkdir $(BUILD_DEVICES_DIR)
 	mkdir $(BUILD_HOSTS_DIR)
 	mkdir $(BUILD_TESTS_DIR)
+	mkdir $(BUILD_TESTS_UTILS_DIR)
 	mkdir $(BUILD_TESTS_DEVICES_DIR)
 	mkdir $(BUILD_TESTS_HOSTS_DIR)
 
