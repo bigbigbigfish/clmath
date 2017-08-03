@@ -20,7 +20,7 @@ MODULE_HOSTS = hosts
 # compiler
 
 CC = gcc
-CC_OPTS = -std=c99 -O3
+CC_OPTS = -std=c99 -O3 -g -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion
 CC_DFLAGS = -lOpenCL
 CL_CPU = -I/opt/intel/intel-opencl-1.2-6.3.0.1904/opencl-1.2-sdk-6.3.0.1904/include
 CL_GPU = -I/usr/local/cuda-8.0/include
@@ -58,7 +58,7 @@ build:
 	mkdir $(BUILD_TESTS_DEVICES_DIR)
 	mkdir $(BUILD_TESTS_HOSTS_DIR)
 
-all: libs tests
+all: clean build libs tests
 
 
 tests: run_tests_devices run_tests_hosts

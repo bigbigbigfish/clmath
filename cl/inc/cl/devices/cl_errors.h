@@ -8,6 +8,8 @@
  #include <cstdio>
 #endif
 
+#include <stdio.h>
+
 const char *err_code (cl_int err_in)
 {
     switch (err_in) {
