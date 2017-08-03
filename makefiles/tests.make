@@ -35,7 +35,10 @@ TESTS_HOSTS_TARGETS := $(patsubst %, $(BUILD_TESTS_HOSTS_DIR)/%, $(notdir $(TEST
 # compiler
 
 TESTS_CFLAGS = $(CC_CFLAGS)
-TESTS_LDFLAGS = $(CC_LDFLAGS) -L$(BUILD_UTILS_DIR) -lcl_utils 
+TESTS_LDFLAGS = $(CC_LDFLAGS) \
+                -L$(BUILD_UTILS_DIR) -lcl_utils \
+                -L$(BUILD_DEVICES_DIR) -lcl_devices \
+                -L$(BUILD_HOSTS_DIR) -lcl_hosts
 
 # ------------------------------------------------------------------------------------------------
 # complication: tests_utils

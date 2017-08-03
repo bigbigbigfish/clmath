@@ -1,6 +1,13 @@
 #ifndef CL_ENGINES_H
 #define CL_ENGINES_H
 
+#ifdef __APPLE__
+  #include <OpenCL/opencl.h>
+#else
+  #include <CL/cl.h>
+#endif
+
+
 typedef struct
 {
   cl_device_id device_id;
@@ -11,5 +18,8 @@ typedef struct
   cl_program program;
   cl_kernel kernel;  
 } engine;
+
+
+void engine_cleanup (engine t);
 
 #endif
