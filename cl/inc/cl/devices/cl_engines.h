@@ -20,6 +20,7 @@ typedef struct
 } engine;
 
 
-void engine_cleanup (engine t);
+void engine_init (engine * t);
+void engine_cleanup (engine * t);
 
 #endif
