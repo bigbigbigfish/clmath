@@ -3,9 +3,22 @@
 PROJECT_DIR = cl
 BUILD_DIR = _build
 
-PROJECT_HEADERS = $(PROJECT_DIR)/include/*.h
-PROJECT_SOURCES = $(PROJECT_DIR)/src/devices/*.c
-PROJECT_TESTS = $(PROJECT_DIR)/tests
+MODULE_DEVICES = devices
+MODULE_HOSTS = hosts
+
+HEADERS_DIR = $(PROJECT_DIR)/inc
+
+SOURCES_DIR = $(PROJECT_DIR)/src
+
+TESTS_DIR = $(PROJECT_DIR)/tests
+TESTS_DEVICES_DIR = $(TESTS_DIR)/$(MODULE_DEVICES)
+TESTS_HOSTS_DIR = $(TESTS_DIR)/$(MODULE_HOSTS)
+
+BUILD_SOURCES_DIR = $(BUILD_DIR)/src
+BUILD_TESTS_DIR = $(BUILD_DIR)/tests
+BUILD_TESTS_DEVICES_DIR = $(BUILD_TESTS_DIR)/$(MODULE_DEVICES)
+BUILD_TESTS_HOSTS_DIR = $(BUILD_TESTS_DIR)/$(MODULE_HOSTS)
+
 
 # ------------------------------------------------------------------------------------------------
 # compiler
@@ -17,12 +30,35 @@ CL_CPU = -I/opt/intel/intel-opencl-1.2-6.3.0.1904/opencl-1.2-sdk-6.3.0.1904/incl
 CL_GPU = -I/usr/local/cuda-8.0/include
 
 # ------------------------------------------------------------------------------------------------
+# console
+
+RED = \033[1;31m
+GREEN = \033[1;32m
+BLUE = \033[1;34m
+YELLOW = \033[1;33m
+NC = \033[1;0m
+
+
+# ------------------------------------------------------------------------------------------------
+# includes
+
+include makefiles/tests.make
+
+# ------------------------------------------------------------------------------------------------
 # 
 
-init:
+build:
 	mkdir $(BUILD_DIR)
+	mkdir $(BUILD_SOURCES_DIR)
+	mkdir $(BUILD_TESTS_DIR)
+	mkdir $(BUILD_TESTS_DEVICES_DIR)
+	mkdir $(BUILD_TESTS_HOSTS_DIR)
 
-vector_add:
-	$(CC) -o $(BUILD_DIR)/test_vector_add $(PROJECT_TESTS)/test_vector_add.c
-	./$(BUILD_DIR)/test_vector_add
+all:
 
+
+tests: run_tests_devices run_tests_hosts
+
+
+clean:
+	rm -rf $(BUILD_DIR)	
