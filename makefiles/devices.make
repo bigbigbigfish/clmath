@@ -27,5 +27,5 @@ $(BUILD_DEVICES_DIR)/$(LIB_DEVICES) : $(DEVICES_OBJECTS)
 
 $(BUILD_DEVICES_DIR)/%.o : $(SOURCES_DEVICES_DIR)/%.c 
 	@echo "$(RED)Compiling $< $(NC)"
-	$(CC) $(CC_FLAGS) -c $< -o $@ 
+	$(CC) $(CC_CFLAGS) -c $< -o $@ 
 

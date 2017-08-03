@@ -27,5 +27,5 @@ $(BUILD_UTILS_DIR)/$(LIB_UTILS) : $(UTILS_OBJECTS)
 
 $(BUILD_UTILS_DIR)/%.o : $(SOURCES_UTILS_DIR)/%.c 
 	@echo "$(RED)Compiling $< $(NC)"
-	$(CC) $(CC_FLAGS) -c $< -o $@ 
+	$(CC) $(CC_CFLAGS) -c $< -o $@ 
 

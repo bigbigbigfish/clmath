@@ -16,6 +16,7 @@
 
 #include "cl/devices/cl_errors.h"
 #include "cl/devices/cl_engines.h"
+#include "cl/utils/file_handler.h"
 
 //pick up device type from compiler command line or from
 //the default type
@@ -30,21 +31,6 @@
 #define TOL    (0.001)   // tolerance used in floating point comparisons
 #define LENGTH (1024)    // length of vectors a, b, c and d
 
-//------------------------------------------------------------------------------
-
-const char *KernelSource = "\n" \
-"__kernel void vadd(                                                 \n" \
-"   __global float* a,                                                  \n" \
-"   __global float* b,                                                  \n" \
-"   __global float* c,                                                  \n" \
-"   __global float* d,                                                  \n" \
-"   const unsigned int count)                                           \n" \
-"{                                                                      \n" \
-"   int i = get_global_id(0);                                           \n" \
-"   if(i < count)                                                       \n" \
-"       d[i] = a[i] + b[i] + c[i];                                             \n" \
-"}                                                                      \n" \
-"\n";
 
 //------------------------------------------------------------------------------
 
@@ -120,9 +106,8 @@ int main(int argc, char** argv)
     checkError(err, "Creating command queue");
 
     // Create the compute program from the source buffer
-    FILE * sources = fopen("cl/src/kernels/vector_add.cl", "rb");
-    nvidia0.program = clCreateProgramWithSource(nvidia0.context, 1, (const char **) &sources, NULL, &err);
-    // nvidia0.program = clCreateProgramWithSource(nvidia0.context, 1, (const char **) & KernelSource, NULL, &err);
+    FILE * kernel_srcs = file_read ("cl/src/kernels/vector_add.cl");
+    nvidia0.program = clCreateProgramWithSource(nvidia0.context, 1, (const char **)&kernel_srcs, NULL, &err);
     checkError(err, "Creating program");
 
     // Build the program

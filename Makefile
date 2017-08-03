@@ -22,11 +22,11 @@ MODULE_UTILS = utils
 
 CC = gcc
 CC_OPTS = -std=c99 -O3 -g -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion
-CC_DFLAGS = -lOpenCL
 CL_CPU = -I/opt/intel/intel-opencl-1.2-6.3.0.1904/opencl-1.2-sdk-6.3.0.1904/include
 CL_GPU = -I/usr/local/cuda-8.0/include
 
-CC_FLAGS = $(CC_OPTS) $(CL_GPU) -I$(HEADERS_DIR) $(CC_DFLAGS)
+CC_CFLAGS = $(CC_OPTS) $(CL_GPU) -I$(HEADERS_DIR)
+CC_LDFLAGS = -lOpenCL
 
 # ------------------------------------------------------------------------------------------------
 # console
@@ -65,7 +65,7 @@ build:
 all: clean build libs tests
 
 
-tests: run_tests_devices run_tests_hosts
+tests: run_tests_utils run_tests_devices run_tests_hosts
 
 
 clean:

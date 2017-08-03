@@ -32,6 +32,12 @@ TESTS_HOSTS_TARGETS := $(patsubst %, $(BUILD_TESTS_HOSTS_DIR)/%, $(notdir $(TEST
 
 
 # ------------------------------------------------------------------------------------------------
+# compiler
+
+TESTS_CFLAGS = $(CC_CFLAGS)
+TESTS_LDFLAGS = $(CC_LDFLAGS) -L$(BUILD_UTILS_DIR) -lcl_utils 
+
+# ------------------------------------------------------------------------------------------------
 # complication: tests_utils
 
 tests_utils: $(TESTS_UTILS_TARGETS)
@@ -39,11 +45,11 @@ tests_utils: $(TESTS_UTILS_TARGETS)
 # devices
 $(BUILD_TESTS_UTILS_DIR)/% : $(BUILD_TESTS_UTILS_DIR)/%.o
 	@echo "$(RED)Linking $@ $(NC)"
-	$(CC) -o $@ $^ $(CC_FLAGS)
+	$(CC) -o $@ $^ $(TESTS_LDFLAGS)
 
 $(BUILD_TESTS_UTILS_DIR)/%.o : $(TESTS_UTILS_DIR)/%.c
 	@echo "$(RED)Compiling $< $(NC)"
-	$(CC) -c $< -o $@ $(CC_FLAGS)
+	$(CC) -c $< -o $@ $(TESTS_CFLAGS)
 
 # ------------------------------------------------------------------------------------------------
 # complication: tests_devices
@@ -53,11 +59,11 @@ tests_devices: $(TESTS_DEVICES_TARGETS)
 # devices
 $(BUILD_TESTS_DEVICES_DIR)/% : $(BUILD_TESTS_DEVICES_DIR)/%.o
 	@echo "$(RED)Linking $@ $(NC)"
-	$(CC) -o $@ $^ $(CC_FLAGS)
+	$(CC) -o $@ $^ $(TESTS_LDFLAGS)
 
 $(BUILD_TESTS_DEVICES_DIR)/%.o : $(TESTS_DEVICES_DIR)/%.c
 	@echo "$(RED)Compiling $< $(NC)"
-	$(CC) -c $< -o $@ $(CC_FLAGS)
+	$(CC) -c $< -o $@ $(TESTS_CFLAGS)
 
 # ------------------------------------------------------------------------------------------------
 # complication: tests_hosts
@@ -67,11 +73,11 @@ tests_hosts: $(TESTS_HOSTS_TARGETS)
 # hosts
 $(BUILD_TESTS_HOSTS_DIR)/% : $(BUILD_TESTS_HOSTS_DIR)/%.o
 	@echo "$(RED)Linking $@ $(NC)"
-	$(CC) -o $@ $^ $(CC_FLAGS)
+	$(CC) -o $@ $^ $(TESTS_LDFLAGS)
 
 $(BUILD_TESTS_HOSTS_DIR)/%.o : $(TESTS_HOSTS_DIR)/%.c
 	@echo "$(RED)Compiling $< $(NC)"
-	$(CC) -c $< -o $@ $(CC_FLAGS)
+	$(CC) -c $< -o $@ $(TESTS_CFLAGS)
 
 
 # ------------------------------------------------------------------------------------------------
