@@ -20,11 +20,10 @@ Prequisites
     3. check *.icd
        - path: /etc/OpenCL/vendors/
 
-    4. run `make platforms`
 
 Compiling
 
 ::
 
-    $ make compile
+    $ make all
 
