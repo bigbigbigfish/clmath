@@ -10,8 +10,10 @@ include makefiles/clmath/hosts.make
 
 LIB_CL = libclmath.a
 
-$(BUILD_SOURCES_DIR)/$(LIB_CL) : utils devices hosts
-	@echo "$(REDLinking $@ $(NC)"
+clmath_objs: utils devices hosts
+
+$(BUILD_SOURCES_DIR)/$(LIB_CL) : $(UTILS_OBJECTS) $(DEVICES_OBJECTS) $(HOSTS_OBJECTS)
+	@echo "$(RED)Linking $@ $(NC)"
 	$(AR) cr $@ $^
 	@echo "$(RED)$(LIB_CL) is saved at $(BUILD_SOURCES_DIR)/$(LIB_CL)$(NC)"
 	@$(AR) -t $(BUILD_SOURCES_DIR)/$(LIB_CL) 

@@ -8,8 +8,8 @@
 #include <sys/types.h>
 
 
-#include "cl/hosts/vectors_cpu.h"
-#include "cl/hosts/vectors_gpu.h"
+#include "clmath/hosts/vectors_cpu.h"
+#include "clmath/hosts/vectors_gpu.h"
 
 
 //------------------------------------------------------------------------------
