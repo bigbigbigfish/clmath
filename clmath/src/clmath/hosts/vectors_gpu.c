@@ -12,7 +12,7 @@ void vector_add_gpu (
                      float * h_E,
                      float * h_F,
                      float * h_G,
-                     const int count)
+                     const unsigned int count)
 {
   cl_int status;
 
@@ -90,7 +90,7 @@ void vector_add_plus_gpu (
                           float * h_B,
                           float * h_C,
                           float * h_D,
-                          const int count)
+                          const unsigned int count)
 {
 
   cl_int status;
