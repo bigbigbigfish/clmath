@@ -2,7 +2,7 @@
 
 int main ()
 {
-  char * kernel = file_read ("cl/src/kernels/vector_add.cl");
+  char * kernel = file_read ("clmath/src/clmath/kernels/vector_add.cl");
   if (kernel)
   {
     puts (kernel);

@@ -1,14 +1,6 @@
-#ifdef __APPLE__
-  #include <OpenCL/cl.h>
-#else
-  #include <CL/cl.h>
-#endif
-
-
 
 #include "clmath/utils/file_handler.h"
 #include "clmath/hosts/vectors_gpu.h"
-#include "clmath/devices/cl_engines.h"
 #include "clmath/devices/cl_errors.h"
 
 
@@ -20,7 +12,7 @@ void vector_add_gpu (
                      float * h_E,
                      float * h_F,
                      float * h_G,
-                     const unsigned int count)
+                     const int count)
 {
   cl_int status;
 
@@ -33,7 +25,7 @@ void vector_add_gpu (
   cl_mem d_G;
 
   engine * t = (engine*)malloc(sizeof(engine));
-  char * kernel_srcs = file_read ("cl/src/kernels/vector_add.cl");
+  char * kernel_srcs = file_read ("clmath/src/clmath/kernels/vector_add.cl");
   engine_init (t, kernel_srcs);
   engine_compute (t, "vector_add");
 
@@ -98,7 +90,7 @@ void vector_add_plus_gpu (
                           float * h_B,
                           float * h_C,
                           float * h_D,
-                          const unsigned int count)
+                          const int count)
 {
 
   cl_int status;
@@ -109,8 +101,9 @@ void vector_add_plus_gpu (
   cl_mem d_C;
   cl_mem d_D;
 
+
   engine * t = (engine*)malloc(sizeof(engine));
-  char * kernel_srcs = file_read ("cl/src/kernels/vector_add.cl");
+  char * kernel_srcs = file_read ("clmath/src/clmath/kernels/vector_add.cl");
   engine_init (t, kernel_srcs);
   engine_compute (t, "vector_add_plus");
 

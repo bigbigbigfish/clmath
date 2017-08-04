@@ -1,6 +1,7 @@
 #ifndef VECTORS_GPU_H
 #define VECTORS_GPU_H
 
+#include "clmath/devices/cl_engines.h"
 
 void vector_add_gpu (
                      float * h_A,
@@ -10,7 +11,7 @@ void vector_add_gpu (
                      float * h_E,
                      float * h_F,
                      float * h_G,
-                     const unsigned int count);
+                     const int count);
 
 
 void vector_add_plus_gpu (
@@ -18,6 +19,6 @@ void vector_add_plus_gpu (
                           float * h_B,
                           float * h_C,
                           float * h_D,
-                          const unsigned int count);
+                          const int count);
 
 #endif

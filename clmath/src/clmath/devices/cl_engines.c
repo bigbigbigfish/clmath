@@ -1,3 +1,6 @@
+#include <stdio.h>
+
+
 #include "clmath/devices/cl_errors.h"
 #include "clmath/devices/cl_engines.h"
 
@@ -12,7 +15,7 @@ void engine_init (engine * t, char * kernel_srcs)
   if (n_platforms == 0)
   {
     printf ("0 platforms found.\n");
-    return EXIT_FAILURE;
+    // return EXIT_FAILURE;
   }
 
   cl_platform_id platforms[n_platforms];
@@ -51,7 +54,7 @@ void engine_init (engine * t, char * kernel_srcs)
     clGetProgramBuildInfo (t->program, t->device_id, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &len);
     printf ("%s\n", buffer);
 
-    return EXIT_FAILURE;
+    // return EXIT_FAILURE;
   }
 }
 

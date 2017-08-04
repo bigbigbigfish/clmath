@@ -8,7 +8,7 @@ SOURCES_DEVICES_DIR = $(SOURCES_DIR)/$(MODULE_DEVICES)
 BUILD_DEVICES_DIR = $(BUILD_SOURCES_DIR)/$(MODULE_DEVICES)
 
 # lib
-LIB_DEVICES = libcl_devices.a
+LIB_DEVICES = libclmath_devices.a
 
 # ------------------------------------------------------------------------------------------------
 # configuration
@@ -20,15 +20,16 @@ DEVICES_OBJECTS := $(patsubst %, $(BUILD_DEVICES_DIR)/%, $(notdir $(DEVICES_SOUR
 # ------------------------------------------------------------------------------------------------
 # complication
 
-# $(BUILD_DEVICES_DIR)/$(LIB_DEVICES) : $(DEVICES_OBJECTS) 
-#	@echo "$(RED)Linking $@ $(NC)"
-#	$(AR) cr $@ $^ 
-#	@echo "$(RED)$(LIB_DEVICES) is saved at $(BUILD_DEVICES_DIR)/$(LIB_DEVICES)$(NC)"
-#	@$(AR) -t $(BUILD_DEVICES_DIR)/$(LIB_DEVICES)
-
 devices: $(DEVICES_OBJECTS)
+
+$(BUILD_DEVICES_DIR)/$(LIB_DEVICES) : $(DEVICES_OBJECTS) 
+	@echo "$(RED)Linking $@ $(NC)"
+	$(AR) cr $@ $^
+	@echo "$(RED)$(LIB_DEVICES) is saved at $(BUILD_DEVICES_DIR)/$(LIB_DEVICES)$(NC)"
+	@$(AR) -t $(BUILD_DEVICES_DIR)/$(LIB_DEVICES)
+
 
 $(BUILD_DEVICES_DIR)/%.o : $(SOURCES_DEVICES_DIR)/%.c 
 	@echo "$(RED)Compiling $< $(NC)"
-	$(CC) $(CC_CFLAGS) $(CC_LDFLAGS) -c $< -o $@ 
+	$(CC) $(CC_CFLAGS) -c $< -o $@ $(CC_LDFLAGS) 
 

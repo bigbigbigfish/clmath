@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-
 #include "clmath/hosts/vectors_cpu.h"
 #include "clmath/hosts/vectors_gpu.h"
 
@@ -85,6 +84,10 @@ int main(int argc, char** argv)
 
   // vector_add_plus
   // engine_compute (nvidia0, "vector_add_plus");
+  // engine * t = (engine*)malloc(sizeof(engine));
+  // char * kernel_srcs = file_read ("clmath/src/clmath/kernels/vector_add.cl");
+  // engine_init (t, kernel_srcs);
+  
   vector_add_plus_gpu (h_A, h_B, h_C, h_D_gpu, LENGTH);
 
 

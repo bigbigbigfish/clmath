@@ -6,7 +6,7 @@ BUILD_DIR = _build
 # main folders
 HEADERS_DIR = $(PROJECT_DIR)/inc
 SOURCES_DIR = $(PROJECT_DIR)/src/clmath
-TESTS_DIR = $(PROJECT_DIR)//src/tests
+TESTS_DIR = $(PROJECT_DIR)/src/tests
 
 # build
 BUILD_SOURCES_DIR = $(BUILD_DIR)/src/clmath
@@ -21,14 +21,15 @@ MODULE_UTILS = utils
 # compiler
 
 CC = gcc
-CL_CPU = /opt/intel/intel-opencl-1.2-6.3.0.1904/opencl-1.2-sdk-6.3.0.1904/include
-CL_GPU = /usr/local/cuda-8.0/include
+CL_CPU_INC = /opt/intel/intel-opencl-1.2-6.3.0.1904/opencl-1.2-sdk-6.3.0.1904/include
+CL_GPU_INC = /usr/local/cuda-8.0/include
+CL_GPU_LIB = /usr/local/cuda-8.0/lib64
 CC_OPTS = -std=c99 -O3 -g -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion
 CC_OPTS_SHARED = -fPIC -rdynamic -shared -Lstatic
 
 
-CC_CFLAGS = $(CC_OPTS) -I$(CL_GPU) -I$(HEADERS_DIR)
-CC_LDFLAGS = -lOpenCL
+CC_CFLAGS = $(CC_OPTS) -I$(CL_GPU_INC) -I$(HEADERS_DIR)
+CC_LDFLAGS = -L$(CL_GPU_LIB) -lOpenCL
 
 # ------------------------------------------------------------------------------------------------
 # console

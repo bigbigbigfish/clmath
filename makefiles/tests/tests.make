@@ -34,8 +34,12 @@ TESTS_HOSTS_TARGETS := $(patsubst %, $(BUILD_TESTS_HOSTS_DIR)/%, $(notdir $(TEST
 # ------------------------------------------------------------------------------------------------
 # compiler
 
-TESTS_CFLAGS = $(CC_CFLAGS)
-TESTS_LDFLAGS = $(CC_LDFLAGS) -L$(BUILD_SOURCES_DIR) -lclmath
+TESTS_CFLAGS = $(CC_CFLAGS) 
+TESTS_LDFLAGS = -L$(BUILD_SOURCES_DIR) -lclmath $(CC_LDFLAGS)
+# TESTS_LDFLAGS = $(CC_LDFLAGS) \
+#                -L$(BUILD_UTILS_DIR) -lclmath_utils \
+#                -L$(BUILD_DEVICES_DIR) -lclmath_devices \
+#                -L$(BUILD_HOSTS_DIR) -lclmath_hosts
 
 # ------------------------------------------------------------------------------------------------
 # complication: tests_utils
@@ -45,11 +49,11 @@ tests_utils: $(TESTS_UTILS_TARGETS)
 # devices
 $(BUILD_TESTS_UTILS_DIR)/% : $(BUILD_TESTS_UTILS_DIR)/%.o
 	@echo "$(RED)Linking $@ $(NC)"
-	$(CC) -o $@ $^ $(TESTS_LDFLAGS)
+	$(CC) $(TESTS_CFLAGS) -o $@ $^ $(TESTS_LDFLAGS)
 
 $(BUILD_TESTS_UTILS_DIR)/%.o : $(TESTS_UTILS_DIR)/%.c
 	@echo "$(RED)Compiling $< $(NC)"
-	$(CC) -c $< -o $@ $(TESTS_CFLAGS)
+	$(CC) $(TESTS_CFLAGS) -c $< -o $@ 
 
 # ------------------------------------------------------------------------------------------------
 # complication: tests_devices
@@ -59,11 +63,11 @@ tests_devices: $(TESTS_DEVICES_TARGETS)
 # devices
 $(BUILD_TESTS_DEVICES_DIR)/% : $(BUILD_TESTS_DEVICES_DIR)/%.o
 	@echo "$(RED)Linking $@ $(NC)"
-	$(CC) -o $@ $^ $(TESTS_LDFLAGS)
+	$(CC) $(TESTS_CFLAGS) -o $@ $^ $(TESTS_LDFLAGS)
 
 $(BUILD_TESTS_DEVICES_DIR)/%.o : $(TESTS_DEVICES_DIR)/%.c
 	@echo "$(RED)Compiling $< $(NC)"
-	$(CC) -c $< -o $@ $(TESTS_CFLAGS)
+	$(CC) $(TESTS_CFLAGS) -c $< -o $@ 
 
 # ------------------------------------------------------------------------------------------------
 # complication: tests_hosts
@@ -73,11 +77,11 @@ tests_hosts: $(TESTS_HOSTS_TARGETS)
 # hosts
 $(BUILD_TESTS_HOSTS_DIR)/% : $(BUILD_TESTS_HOSTS_DIR)/%.o
 	@echo "$(RED)Linking $@ $(NC)"
-	$(CC) -o $@ $^ $(TESTS_LDFLAGS)
+	$(CC) $(TESTS_CFLAGS) -o $@ $^ $(TESTS_LDFLAGS)
 
 $(BUILD_TESTS_HOSTS_DIR)/%.o : $(TESTS_HOSTS_DIR)/%.c
 	@echo "$(RED)Compiling $< $(NC)"
-	$(CC) -c $< -o $@ $(TESTS_CFLAGS)
+	$(CC) $(TESTS_CFLAGS) -c $< -o $@ 
 
 
 # ------------------------------------------------------------------------------------------------
