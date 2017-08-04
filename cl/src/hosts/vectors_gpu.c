@@ -45,8 +45,8 @@ void vector_add_plus_gpu (engine * t,
   status = clEnqueueNDRangeKernel (t->commands, t->kernel, 1, NULL, &global, NULL, 0, NULL, NULL);
   checkError (status, "Enqueueing kernel 1st time");
 
-  status = clEnqueueReadBuffer (t->commands, d_D, CL_TRUE, 0, sizeof(float)*count, h_D, 0, NULL, NULL);
-  checkError (status, "Reading back d_D");
+  // status = clEnqueueReadBuffer (t->commands, d_D, CL_TRUE, 0, sizeof(float)*count, h_D, 0, NULL, NULL);
+  // checkError (status, "Reading back d_D");
 
   clReleaseMemObject (d_A);
   clReleaseMemObject (d_B);

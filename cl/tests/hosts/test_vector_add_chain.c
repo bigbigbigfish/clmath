@@ -10,6 +10,7 @@
 
 #include "cl/utils/file_handler.h"
 #include "cl/devices/cl_errors.h"
+#include "cl/devices/cl_engines.h"
 
 //pick up device type from compiler command line or from
 //the default type
@@ -44,11 +45,7 @@ int main(int argc, char** argv)
 
     size_t global;                  // global domain size
 
-    cl_device_id     device_id;     // compute device id
-    cl_context       context;       // compute context
-    cl_command_queue commands;      // compute command queue
-    cl_program       program;       // compute program
-    cl_kernel        ko_vadd;       // compute kernel
+    engine * nvidia0 = (engine*)malloc(sizeof(engine));
 
     cl_mem d_a;                     // device memory used for the input  a vector
     cl_mem d_b;                     // device memory used for the input  b vector
@@ -88,108 +85,108 @@ int main(int argc, char** argv)
     // Secure a GPU
     for (i = 0; i < numPlatforms; i++)
     {
-        err = clGetDeviceIDs(Platform[i], DEVICE, 1, &device_id, NULL);
+        err = clGetDeviceIDs(Platform[i], DEVICE, 1, &nvidia0->device_id, NULL);
         if (err == CL_SUCCESS)
         {
             break;
         }
     }
 
-    if (device_id == NULL)
+    if (nvidia0->device_id == NULL)
         checkError(err, "Getting device");
 
     // err = output_device_info(device_id);
     // checkError(err, "Outputting device info");
   
     // Create a compute context 
-    context = clCreateContext(0, 1, &device_id, NULL, NULL, &err);
+    nvidia0->context = clCreateContext(0, 1, &nvidia0->device_id, NULL, NULL, &err);
     checkError(err, "Creating context");
 
     // Create a command queue
-    commands = clCreateCommandQueue(context, device_id, 0, &err);
+    nvidia0->commands = clCreateCommandQueue(nvidia0->context, nvidia0->device_id, 0, &err);
     checkError(err, "Creating command queue");
 
     // Create the compute program from the source buffer
     char * kernel_srcs = file_read ("cl/src/kernels/vector_add.cl");
-    program = clCreateProgramWithSource(context, 1, (const char **) &kernel_srcs, NULL, &err);
+    nvidia0->program = clCreateProgramWithSource(nvidia0->context, 1, (const char **) &kernel_srcs, NULL, &err);
     checkError(err, "Creating program");
 
     // Build the program  
-    err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
+    err = clBuildProgram(nvidia0->program, 0, NULL, NULL, NULL, NULL);
     if (err != CL_SUCCESS)
     {
         size_t len;
         char buffer[2048];
 
         printf("Error: Failed to build program executable!\n%s\n", err_code(err));
-        clGetProgramBuildInfo(program, device_id, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &len);
+        clGetProgramBuildInfo(nvidia0->program, nvidia0->device_id, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &len);
         printf("%s\n", buffer);
         return EXIT_FAILURE;
     }
 
     // Create the compute kernel from the program 
-    ko_vadd = clCreateKernel(program, "vector_add", &err);
+    nvidia0->kernel = clCreateKernel(nvidia0->program, "vector_add", &err);
     checkError(err, "Creating kernel");
 
     // Create the input (a, b, e, g) arrays in device memory
     // NB: we copy the host pointers here too
-    d_a  = clCreateBuffer(context,  CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,  dataSize, h_a, &err);
+    d_a  = clCreateBuffer(nvidia0->context,  CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,  dataSize, h_a, &err);
     checkError(err, "Creating buffer d_a");
-    d_b  = clCreateBuffer(context,  CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,  dataSize, h_b, &err);
+    d_b  = clCreateBuffer(nvidia0->context,  CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,  dataSize, h_b, &err);
     checkError(err, "Creating buffer d_b");
-    d_e  = clCreateBuffer(context,  CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,  dataSize, h_e, &err);
+    d_e  = clCreateBuffer(nvidia0->context,  CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,  dataSize, h_e, &err);
     checkError(err, "Creating buffer d_e");
-    d_g  = clCreateBuffer(context,  CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,  dataSize, h_g, &err);
+    d_g  = clCreateBuffer(nvidia0->context,  CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,  dataSize, h_g, &err);
     checkError(err, "Creating buffer d_g");
     
     // Create the output arrays in device memory
-    d_c  = clCreateBuffer(context,  CL_MEM_READ_WRITE, dataSize, NULL, &err);
+    d_c  = clCreateBuffer(nvidia0->context,  CL_MEM_READ_WRITE, dataSize, NULL, &err);
     checkError(err, "Creating buffer d_c");
-    d_d  = clCreateBuffer(context,  CL_MEM_READ_WRITE, dataSize, NULL, &err);
+    d_d  = clCreateBuffer(nvidia0->context,  CL_MEM_READ_WRITE, dataSize, NULL, &err);
     checkError(err, "Creating buffer d_d");
-    d_f  = clCreateBuffer(context,  CL_MEM_WRITE_ONLY, dataSize, NULL, &err);
+    d_f  = clCreateBuffer(nvidia0->context,  CL_MEM_WRITE_ONLY, dataSize, NULL, &err);
     checkError(err, "Creating buffer d_f"); 
 
     const int count = LENGTH;
 
     // Enqueue kernel - first time
     // Set the arguments to our compute kernel
-    err  = clSetKernelArg(ko_vadd, 0, sizeof(cl_mem), &d_a);
-    err |= clSetKernelArg(ko_vadd, 1, sizeof(cl_mem), &d_b);
-    err |= clSetKernelArg(ko_vadd, 2, sizeof(cl_mem), &d_c);
-    err |= clSetKernelArg(ko_vadd, 3, sizeof(unsigned int), &count);
+    err  = clSetKernelArg(nvidia0->kernel, 0, sizeof(cl_mem), &d_a);
+    err |= clSetKernelArg(nvidia0->kernel, 1, sizeof(cl_mem), &d_b);
+    err |= clSetKernelArg(nvidia0->kernel, 2, sizeof(cl_mem), &d_c);
+    err |= clSetKernelArg(nvidia0->kernel, 3, sizeof(unsigned int), &count);
     checkError(err, "Setting kernel arguments"); 
 	
     // Execute the kernel over the entire range of our 1d input data set
     // letting the OpenCL runtime choose the work-group size
     global = count;
-    err = clEnqueueNDRangeKernel(commands, ko_vadd, 1, NULL, &global, NULL, 0, NULL, NULL);
+    err = clEnqueueNDRangeKernel(nvidia0->commands, nvidia0->kernel, 1, NULL, &global, NULL, 0, NULL, NULL);
     checkError(err, "Enqueueing kernel 1st time");
 
     // Enqueue kernel - second time
     // Set different arguments to our compute kernel
-    err  = clSetKernelArg(ko_vadd, 0, sizeof(cl_mem), &d_e);
-    err |= clSetKernelArg(ko_vadd, 1, sizeof(cl_mem), &d_c);
-    err |= clSetKernelArg(ko_vadd, 2, sizeof(cl_mem), &d_d);
+    err  = clSetKernelArg(nvidia0->kernel, 0, sizeof(cl_mem), &d_e);
+    err |= clSetKernelArg(nvidia0->kernel, 1, sizeof(cl_mem), &d_c);
+    err |= clSetKernelArg(nvidia0->kernel, 2, sizeof(cl_mem), &d_d);
     checkError(err, "Setting kernel arguments");
     
     // Enqueue the kernel again    
-    err = clEnqueueNDRangeKernel(commands, ko_vadd, 1, NULL, &global, NULL, 0, NULL, NULL);
+    err = clEnqueueNDRangeKernel(nvidia0->commands, nvidia0->kernel, 1, NULL, &global, NULL, 0, NULL, NULL);
     checkError(err, "Enqueueing kernel 2nd time");
 
     // Enqueue kernel - third time
     // Set different (again) arguments to our compute kernel
-    err  = clSetKernelArg(ko_vadd, 0, sizeof(cl_mem), &d_g);
-    err |= clSetKernelArg(ko_vadd, 1, sizeof(cl_mem), &d_d);
-    err |= clSetKernelArg(ko_vadd, 2, sizeof(cl_mem), &d_f);
+    err  = clSetKernelArg(nvidia0->kernel, 0, sizeof(cl_mem), &d_g);
+    err |= clSetKernelArg(nvidia0->kernel, 1, sizeof(cl_mem), &d_d);
+    err |= clSetKernelArg(nvidia0->kernel, 2, sizeof(cl_mem), &d_f);
     checkError(err, "Setting kernel arguments");
 
     // Enqueue the kernel again    
-    err = clEnqueueNDRangeKernel(commands, ko_vadd, 1, NULL, &global, NULL, 0, NULL, NULL);
+    err = clEnqueueNDRangeKernel(nvidia0->commands, nvidia0->kernel, 1, NULL, &global, NULL, 0, NULL, NULL);
     checkError(err, "Enqueueing kernel 3rd time");
 
     // Read back the result from the compute device
-    err = clEnqueueReadBuffer( commands, d_f, CL_TRUE, 0, sizeof(float) * count, h_f, 0, NULL, NULL );  
+    err = clEnqueueReadBuffer( nvidia0->commands, d_f, CL_TRUE, 0, sizeof(float) * count, h_f, 0, NULL, NULL );  
     checkError(err, "Reading back d_f");
     
     // Test the results
@@ -218,10 +215,7 @@ int main(int argc, char** argv)
     clReleaseMemObject(d_e);
     clReleaseMemObject(d_f);
     clReleaseMemObject(d_g);
-    clReleaseProgram(program);
-    clReleaseKernel(ko_vadd);
-    clReleaseCommandQueue(commands);
-    clReleaseContext(context);
+    engine_cleanup (nvidia0);
 
     free(h_a);
     free(h_b);
