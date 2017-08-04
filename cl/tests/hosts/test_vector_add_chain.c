@@ -1,23 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#ifdef __APPLE__
-#include <OpenCL/opencl.h>
-#include <unistd.h>
-#else
-#include <CL/cl.h>
-#endif
 
-#include "cl/utils/file_handler.h"
-#include "cl/devices/cl_errors.h"
-#include "cl/devices/cl_engines.h"
 #include "cl/hosts/vectors_gpu.h"
 
-//pick up device type from compiler command line or from
-//the default type
-#ifndef DEVICE
-#define DEVICE CL_DEVICE_TYPE_DEFAULT
-#endif
 
 // extern int output_device_info(cl_device_id );
 
@@ -46,7 +31,7 @@ int main(int argc, char** argv)
 
     size_t global;                  // global domain size
 
-    engine * nvidia0 = (engine*)malloc(sizeof(engine));
+    // engine * nvidia0 = (engine*)malloc(sizeof(engine));
 
     cl_mem d_a;                     // device memory used for the input  a vector
     cl_mem d_b;                     // device memory used for the input  b vector
@@ -67,44 +52,44 @@ int main(int argc, char** argv)
 
     // Set up platform and GPU device
 
-    cl_uint numPlatforms;
+    // cl_uint numPlatforms;
 
     // Find number of platforms
-    err = clGetPlatformIDs(0, NULL, &numPlatforms);
-    checkError(err, "Finding platforms");
-    if (numPlatforms == 0)
-    {
-        printf("Found 0 platforms!\n");
-        return EXIT_FAILURE;
-    }
+    // err = clGetPlatformIDs(0, NULL, &numPlatforms);
+    // checkError(err, "Finding platforms");
+    // if (numPlatforms == 0)
+    // {
+    //     printf("Found 0 platforms!\n");
+    //     return EXIT_FAILURE;
+    // }
 
     // Get all platforms
-    cl_platform_id Platform[numPlatforms];
-    err = clGetPlatformIDs(numPlatforms, Platform, NULL);
-    checkError(err, "Getting platforms");
+    // cl_platform_id Platform[numPlatforms];
+    // err = clGetPlatformIDs(numPlatforms, Platform, NULL);
+    // checkError(err, "Getting platforms");
 
     // Secure a GPU
-    for (i = 0; i < numPlatforms; i++)
-    {
-        err = clGetDeviceIDs(Platform[i], DEVICE, 1, &nvidia0->device_id, NULL);
-        if (err == CL_SUCCESS)
-        {
-            break;
-        }
-    }
+    // for (i = 0; i < numPlatforms; i++)
+    // {
+    //     err = clGetDeviceIDs(Platform[i], DEVICE, 1, &nvidia0->device_id, NULL);
+    //     if (err == CL_SUCCESS)
+    //     {
+    //         break;
+    //     }
+    // }
 
-    if (nvidia0->device_id == NULL)
-        checkError(err, "Getting device");
+    // if (nvidia0->device_id == NULL)
+    //     checkError(err, "Getting device");
 
     // err = output_device_info(device_id);
     // checkError(err, "Outputting device info");
   
 
-    char * kernel_srcs = file_read ("cl/src/kernels/vector_add.cl");
-    engine_init (nvidia0, kernel_srcs);
+    // char * kernel_srcs = file_read ("cl/src/kernels/vector_add.cl");
+    // engine_init (nvidia0, kernel_srcs);
 
     // engine_compute (nvidia0, "vector_add");
-    vector_add_gpu (nvidia0, h_a, h_b, h_c, h_d, h_e, h_f, h_g, LENGTH);    
+    vector_add_gpu (h_a, h_b, h_c, h_d, h_e, h_f, h_g, LENGTH);    
 
 /*
     // Create the input (a, b, e, g) arrays in device memory
@@ -195,7 +180,7 @@ int main(int argc, char** argv)
     // clReleaseMemObject(d_e);
     // clReleaseMemObject(d_f);
     // clReleaseMemObject(d_g);
-    engine_cleanup (nvidia0);
+    // engine_cleanup (nvidia0);
 
     free(h_a);
     free(h_b);

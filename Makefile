@@ -22,10 +22,10 @@ MODULE_UTILS = utils
 
 CC = gcc
 CC_OPTS = -std=c99 -O3 -g -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion
-CL_CPU = -I/opt/intel/intel-opencl-1.2-6.3.0.1904/opencl-1.2-sdk-6.3.0.1904/include
-CL_GPU = -I/usr/local/cuda-8.0/include
+CL_CPU = /opt/intel/intel-opencl-1.2-6.3.0.1904/opencl-1.2-sdk-6.3.0.1904/include
+CL_GPU = /usr/local/cuda-8.0/include
 
-CC_CFLAGS = $(CC_OPTS) $(CL_GPU) -I$(HEADERS_DIR)
+CC_CFLAGS = $(CC_OPTS) -I$(CL_GPU) -I$(HEADERS_DIR)
 CC_LDFLAGS = -lOpenCL
 
 # ------------------------------------------------------------------------------------------------

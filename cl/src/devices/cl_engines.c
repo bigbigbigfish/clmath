@@ -6,6 +6,31 @@ void engine_init (engine * t, char * kernel_srcs)
 {
   cl_int status;
 
+  cl_uint n_platforms;
+  status = clGetPlatformIDs (0, NULL, &n_platforms);
+  checkError (status, "Finding platforms");
+  if (n_platforms == 0)
+  {
+    printf ("0 platforms found.\n");
+    return EXIT_FAILURE;
+  }
+
+  cl_platform_id platforms[n_platforms];
+  status = clGetPlatformIDs (n_platforms, platforms, NULL);
+  checkError (status, "Getting platforms");
+   
+  for (int i = 0; i < n_platforms; ++i)
+  {
+    status = clGetDeviceIDs (platforms[i], CL_DEVICE_TYPE_DEFAULT, 1, &t->device_id, NULL);
+    if (status == CL_SUCCESS)
+    {
+      break;
+    }
+  }
+ 
+  if (t->device_id == NULL)
+    checkError (status, "Gettings device"); 
+
   t->context = clCreateContext (0, 1, &t->device_id, NULL, NULL, &status);
   checkError (status, "Creating context");
 

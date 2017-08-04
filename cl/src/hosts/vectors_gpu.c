@@ -5,12 +5,14 @@
 #endif
 
 
+
 #include "cl/utils/file_handler.h"
 #include "cl/hosts/vectors_gpu.h"
+#include "cl/devices/cl_engines.h"
 #include "cl/devices/cl_errors.h"
 
 
-void vector_add_gpu (engine * t,
+void vector_add_gpu (
                      float * h_A,
                      float * h_B,
                      float * h_C,
@@ -30,6 +32,9 @@ void vector_add_gpu (engine * t,
   cl_mem d_F;
   cl_mem d_G;
 
+  engine * t = (engine*)malloc(sizeof(engine));
+  char * kernel_srcs = file_read ("cl/src/kernels/vector_add.cl");
+  engine_init (t, kernel_srcs);
   engine_compute (t, "vector_add");
 
   d_A = clCreateBuffer(t->context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, count, h_A, &status);
@@ -83,10 +88,11 @@ void vector_add_gpu (engine * t,
   clReleaseMemObject (d_E);
   clReleaseMemObject (d_F);
   clReleaseMemObject (d_G);
+  engine_cleanup (t);
 }
 
 
-void vector_add_plus_gpu (engine * t,
+void vector_add_plus_gpu (
                           float * h_A,
                           float * h_B,
                           float * h_C,
@@ -101,6 +107,11 @@ void vector_add_plus_gpu (engine * t,
   cl_mem d_B;
   cl_mem d_C;
   cl_mem d_D;
+
+  engine * t = (engine*)malloc(sizeof(engine));
+  char * kernel_srcs = file_read ("cl/src/kernels/vector_add.cl");
+  engine_init (t, kernel_srcs);
+  engine_compute (t, "vector_add_plus");
 
   d_A = clCreateBuffer (t->context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, count, h_A, &status);
   checkError (status, "Creating buffer d_A");
@@ -128,5 +139,6 @@ void vector_add_plus_gpu (engine * t,
   clReleaseMemObject (d_B);
   clReleaseMemObject (d_C);
   clReleaseMemObject (d_D);
+  engine_cleanup (t);
 }
 

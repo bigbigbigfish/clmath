@@ -16,6 +16,7 @@ LIB_DEVICES = libcl_devices.a
 DEVICES_SOURCES := $(wildcard $(SOURCES_DEVICES_DIR)/*.c)
 DEVICES_OBJECTS := $(patsubst %, $(BUILD_DEVICES_DIR)/%, $(notdir $(DEVICES_SOURCES:.c=.o)))
 
+
 # ------------------------------------------------------------------------------------------------
 # complication
 
@@ -27,5 +28,5 @@ $(BUILD_DEVICES_DIR)/$(LIB_DEVICES) : $(DEVICES_OBJECTS)
 
 $(BUILD_DEVICES_DIR)/%.o : $(SOURCES_DEVICES_DIR)/%.c 
 	@echo "$(RED)Compiling $< $(NC)"
-	$(CC) $(CC_CFLAGS) -c $< -o $@ 
+	$(CC) $(CC_CFLAGS) $(CC_LDFLAGS) -c $< -o $@ 
 
