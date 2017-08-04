@@ -24,7 +24,7 @@ void engine_init (engine * t, char * kernel_srcs)
    
   for (int i = 0; i < n_platforms; ++i)
   {
-    status = clGetDeviceIDs (platforms[i], CL_DEVICE_TYPE_DEFAULT, 1, &t->device_id, NULL);
+    status = clGetDeviceIDs (platforms[i], CL_DEVICE_TYPE_GPU, 1, &t->device_id, NULL);
     if (status == CL_SUCCESS)
     {
       break;
