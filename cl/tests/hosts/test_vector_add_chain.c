@@ -11,6 +11,7 @@
 #include "cl/utils/file_handler.h"
 #include "cl/devices/cl_errors.h"
 #include "cl/devices/cl_engines.h"
+#include "cl/hosts/vectors_gpu.h"
 
 //pick up device type from compiler command line or from
 //the default type
@@ -58,10 +59,10 @@ int main(int argc, char** argv)
     // Fill vectors a and b with random float values
     int i = 0;
     for(i = 0; i < LENGTH; i++){
-        h_a[i] = rand() / (float)RAND_MAX;
-        h_b[i] = rand() / (float)RAND_MAX;
-        h_e[i] = rand() / (float)RAND_MAX;
-        h_g[i] = rand() / (float)RAND_MAX;
+        h_a[i] = (float)rand() / (float)RAND_MAX;
+        h_b[i] = (float)rand() / (float)RAND_MAX;
+        h_e[i] = (float)rand() / (float)RAND_MAX;
+        h_g[i] = (float)rand() / (float)RAND_MAX;
     }
 
     // Set up platform and GPU device
@@ -98,36 +99,14 @@ int main(int argc, char** argv)
     // err = output_device_info(device_id);
     // checkError(err, "Outputting device info");
   
-    // Create a compute context 
-    nvidia0->context = clCreateContext(0, 1, &nvidia0->device_id, NULL, NULL, &err);
-    checkError(err, "Creating context");
 
-    // Create a command queue
-    nvidia0->commands = clCreateCommandQueue(nvidia0->context, nvidia0->device_id, 0, &err);
-    checkError(err, "Creating command queue");
-
-    // Create the compute program from the source buffer
     char * kernel_srcs = file_read ("cl/src/kernels/vector_add.cl");
-    nvidia0->program = clCreateProgramWithSource(nvidia0->context, 1, (const char **) &kernel_srcs, NULL, &err);
-    checkError(err, "Creating program");
+    engine_init (nvidia0, kernel_srcs);
 
-    // Build the program  
-    err = clBuildProgram(nvidia0->program, 0, NULL, NULL, NULL, NULL);
-    if (err != CL_SUCCESS)
-    {
-        size_t len;
-        char buffer[2048];
+    // engine_compute (nvidia0, "vector_add");
+    vector_add_gpu (nvidia0, h_a, h_b, h_c, h_d, h_e, h_f, h_g, LENGTH);    
 
-        printf("Error: Failed to build program executable!\n%s\n", err_code(err));
-        clGetProgramBuildInfo(nvidia0->program, nvidia0->device_id, CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &len);
-        printf("%s\n", buffer);
-        return EXIT_FAILURE;
-    }
-
-    // Create the compute kernel from the program 
-    nvidia0->kernel = clCreateKernel(nvidia0->program, "vector_add", &err);
-    checkError(err, "Creating kernel");
-
+/*
     // Create the input (a, b, e, g) arrays in device memory
     // NB: we copy the host pointers here too
     d_a  = clCreateBuffer(nvidia0->context,  CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,  dataSize, h_a, &err);
@@ -188,11 +167,12 @@ int main(int argc, char** argv)
     // Read back the result from the compute device
     err = clEnqueueReadBuffer( nvidia0->commands, d_f, CL_TRUE, 0, sizeof(float) * count, h_f, 0, NULL, NULL );  
     checkError(err, "Reading back d_f");
+*/
     
     // Test the results
     correct = 0;
     float tmp;
-    
+    unsigned int count = LENGTH;
     for(i = 0; i < count; i++)
     {
         tmp = h_a[i] + h_b[i] + h_e[i] + h_g[i];     // assign element i of a+b+e+g to tmp
@@ -208,13 +188,13 @@ int main(int argc, char** argv)
     printf("C = A+B+E+G:  %d out of %d results were correct.\n", correct, count);
 
     // cleanup then shutdown
-    clReleaseMemObject(d_a);
-    clReleaseMemObject(d_b);
-    clReleaseMemObject(d_c);
-    clReleaseMemObject(d_d);
-    clReleaseMemObject(d_e);
-    clReleaseMemObject(d_f);
-    clReleaseMemObject(d_g);
+    // clReleaseMemObject(d_a);
+    // clReleaseMemObject(d_b);
+    // clReleaseMemObject(d_c);
+    // clReleaseMemObject(d_d);
+    // clReleaseMemObject(d_e);
+    // clReleaseMemObject(d_f);
+    // clReleaseMemObject(d_g);
     engine_cleanup (nvidia0);
 
     free(h_a);
