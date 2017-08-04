@@ -19,11 +19,13 @@ UTILS_OBJECTS := $(patsubst %, $(BUILD_UTILS_DIR)/%, $(notdir $(UTILS_SOURCES:.c
 # ------------------------------------------------------------------------------------------------
 # complication
 
-$(BUILD_UTILS_DIR)/$(LIB_UTILS) : $(UTILS_OBJECTS) 
-	@echo "$(RED)Linking $@ $(NC)"
-	$(AR) cr $@ $^ 
-	@echo "$(RED)$(LIB_UTILS) is saved at $(BUILD_UTILS_DIR)/$(LIB_UTILS)$(NC)"
-	@$(AR) -t $(BUILD_UTILS_DIR)/$(LIB_UTILS)
+# $(BUILD_UTILS_DIR)/$(LIB_UTILS) : $(UTILS_OBJECTS) 
+#	@echo "$(RED)Linking $@ $(NC)"
+#	$(AR) cr $@ $^ 
+#	@echo "$(RED)$(LIB_UTILS) is saved at $(BUILD_UTILS_DIR)/$(LIB_UTILS)$(NC)"
+#	@$(AR) -t $(BUILD_UTILS_DIR)/$(LIB_UTILS)
+
+utils: $(UTILS_OBJECTS)
 
 $(BUILD_UTILS_DIR)/%.o : $(SOURCES_UTILS_DIR)/%.c 
 	@echo "$(RED)Compiling $< $(NC)"

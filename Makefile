@@ -1,15 +1,15 @@
 # ------------------------------------------------------------------------------------------------
 
-PROJECT_DIR = cl
+PROJECT_DIR = clmath
 BUILD_DIR = _build
 
 # main folders
 HEADERS_DIR = $(PROJECT_DIR)/inc
-SOURCES_DIR = $(PROJECT_DIR)/src/cl
+SOURCES_DIR = $(PROJECT_DIR)/src/clmath
 TESTS_DIR = $(PROJECT_DIR)//src/tests
 
 # build
-BUILD_SOURCES_DIR = $(BUILD_DIR)/src/cl
+BUILD_SOURCES_DIR = $(BUILD_DIR)/src/clmath
 BUILD_TESTS_DIR = $(BUILD_DIR)/src/tests
 
 # modules
@@ -41,12 +41,10 @@ NC = \033[1;0m
 # ------------------------------------------------------------------------------------------------
 # includes
 
-include makefiles/utils.make
-include makefiles/devices.make
-include makefiles/hosts.make
+include makefiles/clmath.make
 include makefiles/tests.make
 
-libs: $(BUILD_UTILS_DIR)/$(LIB_UTILS) $(BUILD_DEVICES_DIR)/$(LIB_DEVICES) $(BUILD_HOSTS_DIR)/$(LIB_HOSTS) 
+libs: $(BUILD_SOURCES_DIR)/$(LIB_CL)
 
 # ------------------------------------------------------------------------------------------------
 # 

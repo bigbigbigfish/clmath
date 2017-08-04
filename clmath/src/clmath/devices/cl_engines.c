@@ -1,5 +1,5 @@
-#include "cl/devices/cl_errors.h"
-#include "cl/devices/cl_engines.h"
+#include "clmath/devices/cl_errors.h"
+#include "clmath/devices/cl_engines.h"
 
 
 void engine_init (engine * t, char * kernel_srcs)

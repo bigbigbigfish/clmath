@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "cl/hosts/vectors_cpu.h"
+#include "clmath/hosts/vectors_cpu.h"
 
 
 void vector_add_plus_cpu (float * h_A, 

@@ -20,11 +20,13 @@ DEVICES_OBJECTS := $(patsubst %, $(BUILD_DEVICES_DIR)/%, $(notdir $(DEVICES_SOUR
 # ------------------------------------------------------------------------------------------------
 # complication
 
-$(BUILD_DEVICES_DIR)/$(LIB_DEVICES) : $(DEVICES_OBJECTS) 
-	@echo "$(RED)Linking $@ $(NC)"
-	$(AR) cr $@ $^ 
-	@echo "$(RED)$(LIB_DEVICES) is saved at $(BUILD_DEVICES_DIR)/$(LIB_DEVICES)$(NC)"
-	@$(AR) -t $(BUILD_DEVICES_DIR)/$(LIB_DEVICES)
+# $(BUILD_DEVICES_DIR)/$(LIB_DEVICES) : $(DEVICES_OBJECTS) 
+#	@echo "$(RED)Linking $@ $(NC)"
+#	$(AR) cr $@ $^ 
+#	@echo "$(RED)$(LIB_DEVICES) is saved at $(BUILD_DEVICES_DIR)/$(LIB_DEVICES)$(NC)"
+#	@$(AR) -t $(BUILD_DEVICES_DIR)/$(LIB_DEVICES)
+
+devices: $(DEVICES_OBJECTS)
 
 $(BUILD_DEVICES_DIR)/%.o : $(SOURCES_DEVICES_DIR)/%.c 
 	@echo "$(RED)Compiling $< $(NC)"

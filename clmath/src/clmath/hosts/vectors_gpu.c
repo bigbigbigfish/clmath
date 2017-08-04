@@ -6,10 +6,10 @@
 
 
 
-#include "cl/utils/file_handler.h"
-#include "cl/hosts/vectors_gpu.h"
-#include "cl/devices/cl_engines.h"
-#include "cl/devices/cl_errors.h"
+#include "clmath/utils/file_handler.h"
+#include "clmath/hosts/vectors_gpu.h"
+#include "clmath/devices/cl_engines.h"
+#include "clmath/devices/cl_errors.h"
 
 
 void vector_add_gpu (
@@ -59,7 +59,8 @@ void vector_add_gpu (
   status |= clSetKernelArg (t->kernel, 3, sizeof(unsigned int), &count);
   checkError (status, "Setting kernel arguments");
 
-  status = clEnqueueNDRangeKernel (t->commands, t->kernel, 1, NULL, &count, NULL, 0, NULL, NULL);
+  size_t global = count;
+  status = clEnqueueNDRangeKernel (t->commands, t->kernel, 1, NULL, &global, NULL, 0, NULL, NULL);
   checkError (status, "Enqueueing kernel 1st time");
 
   status = clSetKernelArg (t->kernel, 0, sizeof(cl_mem), &d_E);
@@ -67,7 +68,7 @@ void vector_add_gpu (
   status |= clSetKernelArg (t->kernel, 2, sizeof(cl_mem), &d_F);
   checkError (status, "Setting kernel arguments");
 
-  status = clEnqueueNDRangeKernel (t->commands, t->kernel, 1, NULL, &count, NULL, 0, NULL, NULL);
+  status = clEnqueueNDRangeKernel (t->commands, t->kernel, 1, NULL, &global, NULL, 0, NULL, NULL);
   checkError (status, "Enqueueing kernel 2nd time");
 
   status = clSetKernelArg (t->kernel, 0, sizeof(cl_mem), &d_G);
@@ -75,7 +76,7 @@ void vector_add_gpu (
   status |= clSetKernelArg (t->kernel, 2, sizeof(cl_mem), &d_F);
   checkError (status, "Setting kernel arguments");
 
-  status = clEnqueueNDRangeKernel (t->commands, t->kernel, 1, NULL, &count, NULL, 0, NULL, NULL);
+  status = clEnqueueNDRangeKernel (t->commands, t->kernel, 1, NULL, &global, NULL, 0, NULL, NULL);
   checkError (status, "Enqueueing kernel 3rd time");
 
   status = clEnqueueReadBuffer (t->commands, d_F, CL_TRUE, 0, sizeof(float)*count, h_F, 0, NULL, NULL );

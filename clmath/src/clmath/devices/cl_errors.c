@@ -1,4 +1,4 @@
-#include "cl/devices/cl_errors.h"
+#include "clmath/devices/cl_errors.h"
 
 const char *err_code (cl_int err_in)
 {
