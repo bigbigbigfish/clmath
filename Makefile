@@ -5,12 +5,12 @@ BUILD_DIR = _build
 
 # main folders
 HEADERS_DIR = $(PROJECT_DIR)/inc
-SOURCES_DIR = $(PROJECT_DIR)/src
-TESTS_DIR = $(PROJECT_DIR)/tests
+SOURCES_DIR = $(PROJECT_DIR)/src/cl
+TESTS_DIR = $(PROJECT_DIR)//src/tests
 
 # build
-BUILD_SOURCES_DIR = $(BUILD_DIR)/src
-BUILD_TESTS_DIR = $(BUILD_DIR)/tests
+BUILD_SOURCES_DIR = $(BUILD_DIR)/src/cl
+BUILD_TESTS_DIR = $(BUILD_DIR)/src/tests
 
 # modules
 MODULE_DEVICES = devices
@@ -52,15 +52,15 @@ libs: $(BUILD_UTILS_DIR)/$(LIB_UTILS) $(BUILD_DEVICES_DIR)/$(LIB_DEVICES) $(BUIL
 # 
 
 build:
-	mkdir $(BUILD_DIR)
-	mkdir $(BUILD_SOURCES_DIR)
-	mkdir $(BUILD_UTILS_DIR)
-	mkdir $(BUILD_DEVICES_DIR)
-	mkdir $(BUILD_HOSTS_DIR)
-	mkdir $(BUILD_TESTS_DIR)
-	mkdir $(BUILD_TESTS_UTILS_DIR)
-	mkdir $(BUILD_TESTS_DEVICES_DIR)
-	mkdir $(BUILD_TESTS_HOSTS_DIR)
+	mkdir -p $(BUILD_DIR)
+	mkdir -p $(BUILD_SOURCES_DIR)
+	mkdir -p $(BUILD_UTILS_DIR)
+	mkdir -p $(BUILD_DEVICES_DIR)
+	mkdir -p $(BUILD_HOSTS_DIR)
+	mkdir -p $(BUILD_TESTS_DIR)
+	mkdir -p $(BUILD_TESTS_UTILS_DIR)
+	mkdir -p $(BUILD_TESTS_DEVICES_DIR)
+	mkdir -p $(BUILD_TESTS_HOSTS_DIR)
 
 all: clean build libs tests
 
