@@ -30,13 +30,14 @@ void matrix_mul_gpu (float * h_A,
   checkError (status, "Creating buffer d_C");
 
   const size_t global[2] = {M, N};
-  const size_t count = M*N;
   for (int i = 0; i < M*N; ++i)
   {
     status = clSetKernelArg (t->kernel, 0, sizeof(cl_mem), &d_A);
     status |= clSetKernelArg (t->kernel, 1, sizeof(cl_mem), &d_B);
     status |= clSetKernelArg (t->kernel, 2, sizeof(cl_mem), &d_C);
-    status |= clSetKernelArg (t->kernel, 3, sizeof(unsigned int), &count);
+    status |= clSetKernelArg (t->kernel, 3, sizeof(unsigned int), &M);
+    status |= clSetKernelArg (t->kernel, 4, sizeof(unsigned int), &N);
+    status |= clSetKernelArg (t->kernel, 5, sizeof(unsigned int), &K);
     checkError (status, "Setting kernel argumenets");
 
     status = clEnqueueNDRangeKernel (t->commands, t->kernel, 2, NULL, global, NULL, 0, NULL, NULL);

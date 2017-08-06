@@ -6,9 +6,9 @@
 
 int main (void)
 {
-  unsigned int M = 1024;
-  unsigned int N = 1024;
-  unsigned int K = 1024;
+  unsigned int M = 24;
+  unsigned int N = 24;
+  unsigned int K = 24;
 
   float * h_A = (float*)malloc(M*K*sizeof(float));
   float * h_B = (float*)malloc(K*N*sizeof(float));
@@ -18,6 +18,7 @@ int main (void)
 
   matrix_mul_cpu (h_A, h_B, h_C_cpu, M, N, K);
   matrix_mul_gpu (h_A, h_B, h_C_gpu, M, N, K);
+  eval_results (h_C_cpu, h_C_gpu, M*N);
 
   free (h_A);
   free (h_B);
