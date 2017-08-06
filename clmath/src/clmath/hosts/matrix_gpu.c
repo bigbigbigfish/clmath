@@ -20,7 +20,7 @@ void matrix_mul_gpu (float * h_A,
   engine * t = (engine*)malloc(sizeof(engine));
   char * kernel_srcs = file_read ("clmath/src/clmath/kernels/matrix.cl");
   engine_init (t, kernel_srcs);
-  engine_compute (t, "matrix_mul");
+  engine_compute (t, "matrix_mul_col");
 
   d_A = clCreateBuffer (t->context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float)*M*K, h_A, &status);
   checkError (status, "Creating buffer d_A");

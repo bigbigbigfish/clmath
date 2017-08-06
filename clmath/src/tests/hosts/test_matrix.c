@@ -18,7 +18,7 @@ int main (void)
 
   matrix_mul_cpu (h_A, h_B, h_C_cpu, M, N, K);
   matrix_mul_gpu (h_A, h_B, h_C_gpu, M, N, K);
-  eval_results (h_C_cpu, h_C_gpu, M*N);
+  // eval_results (h_C_cpu, h_C_gpu, M*N);
 
   free (h_A);
   free (h_B);

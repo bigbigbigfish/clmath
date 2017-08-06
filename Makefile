@@ -29,7 +29,7 @@ CC_OPTS_SHARED = -fPIC -rdynamic -shared -Lstatic
 
 
 CC_CFLAGS = $(CC_OPTS) -I$(CL_GPU_INC) -I$(HEADERS_DIR)
-CC_LDFLAGS = -L$(CL_GPU_LIB) -lOpenCL
+CC_LDFLAGS = -L$(CL_GPU_LIB) -lOpenCL 
 
 # ------------------------------------------------------------------------------------------------
 # console
