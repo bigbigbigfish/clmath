@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "clmath/utils/timer.h"
 #include "clmath/hosts/vectors_gpu.h"
 
 
@@ -20,9 +21,16 @@ int main (void)
   float * h_F_gpu = (float *)malloc(sizeof(float)*count);   // f vector (result)
   float * h_G = (float *)malloc(sizeof(float)*count);       // g vector
 
+  double tic_cpu = wtime();
   vector_add_cpu (h_A, h_B, h_C, h_D, h_E, h_F_cpu, h_G, count);
+  double toc_cpu = wtime() - tic_cpu;
+
+  double tic_gpu = wtime();
   vector_add_gpu (h_A, h_B, h_C, h_D, h_E, h_F_gpu, h_G, count);    
+  double toc_gpu = wtime() - tic_gpu;
+
   eval_results (h_F_cpu, h_F_gpu, count);
+  printf ("CPU time: %f, GPU time: %f\n", toc_cpu, toc_gpu);
     
   free (h_A);
   free (h_B);
