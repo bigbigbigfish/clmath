@@ -1,70 +1,18 @@
-__kernel void matrix_mul_col (__global float * A,
-                              __global float * B,
-                              __global float * C,
-                              const unsigned int M,
-                              const unsigned int N,
-                              const unsigned int K)
+__kernel void matrix_mul (const __global float * d_A,
+                          const __global float * d_B,
+                          __global float * d_C,
+                          const unsigned int M,
+                          const unsigned int N,
+                          const unsigned int K)
 {
-  int k;
-  int i = get_global_id (0);
-  int j = get_global_id (0);
-  float tmp;
+  // thread identifiers
+  const int global_row = get_global_id (0);
+  const int global_col = get_global_id (1);
 
-  if ((i < M) && (j < N))
-  {
-    tmp = 0.0f;
-    for (k = 0; k < K; ++k)
-      tmp += A[i*K+k] * B[k*N+j];
-    C[i*N+j] = tmp;
-  }
-}
+  // compute a single element (loop over K)
+  float acc = 0.0f;
+  for (int k = 0; k < K; ++k)
+    acc += d_A[k*M + global_row] * d_B[global_col*K + k];
 
-
-__kernel void matrix_mul_row (__global float * A,
-                              __global float * B,
-                              __global float * C,
-                              const unsigned int M,
-                              const unsigned int N,
-                              const unsigned int K)
-{
-  int k, j;
-  int i = get_global_id (0);
-  float tmp;
-
-  if (i < M)
-  {
-    for (j = 0; j < N; ++j)
-    {
-      tmp = 0.0f;
-      for (k = 0; k < K; ++k)
-        tmp += A[i*K+k] * B[k*N+j];
-      C[i*N+j] = tmp;
-    }
-  }
-}
-
-
-__kernel void matrix_mul_private (__global float * A,
-                                  __global float * B,
-                                  __global float * C,
-                                  const unsigned int M,
-                                  const unsigned int N,
-                                  const unsigned int K)
-{
-  int k, j;
-  int i = get_global_id (0);
-  float Awrk[1024];
-  float tmp;
-
-  if (i < N)
-  {
-    for (k = 0; k < K; ++k)
-      Awrk[k] = A[i*K+k];
-
-    for (j = 0; j < N; j++)
-      tmp = 0.0f;
-      for (k = 0; k < N; ++k)
-        tmp += Awrk[k] * B[k*N+j];
-      C[i*N+j] = tmp;
-  }
+  d_C[global_col*M + global_row] = acc;
 }

@@ -18,17 +18,16 @@ void matrix_mul_cpu (float * h_A,
   for (int i = 0; i < K*N; ++i)
     h_B[i] = (float)rand() / (float)RAND_MAX;
 
-
-  for (unsigned int i = 0; i < M; ++i)
+  for (unsigned int m = 0; m < M; ++m)
   {
-    for (unsigned int j = 0; j < N; ++j)
+    for (unsigned int n = 0; n < N; ++n)
     {
-      tmp = 0.0f;
+      float acc = 0.0f;
       for (unsigned int k = 0; k < K; ++k)
       {
-        tmp += h_A[i*K+k] * h_B[k*K+j];
+        acc += h_A[k*M + m] * h_B[n*K + k];
       }
-      h_C[i*K+j] = tmp;
+      h_C[n*M + m] = acc;
     }
   }
 }
