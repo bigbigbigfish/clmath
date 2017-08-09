@@ -285,7 +285,7 @@ __kernel void transpose (const __global float * input,
   const int newID0 = get_group_id(1) * TRANSPOSEY + tx;
   const int newID1 = get_group_id(0) * TRANSPOSEX + ty;
 
-  // store the tranposed result (coalesced)
+  // store the transposed result (coalesced)
   if (newID0 < Q && newID1 < P)
   {
     output[newID1*Q + newID0] = buffer[tx][ty];
@@ -294,7 +294,7 @@ __kernel void transpose (const __global float * input,
 
 
 /*
- * Pre-tranpose the input matrix B and use rectangular tiles
+ * Pre-transpose the input matrix B and use rectangular tiles
  */
 __kernel void matrix_mul_transpose (const __global float * d_A,
                                     const __global float * d_B,

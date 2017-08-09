@@ -36,6 +36,25 @@ void matrix_mul_gpu_set1 (engine * t, float * h_A,
 }
 
 
+void matrix_mul_gpu_set2 (engine * t, float * h_A, 
+                                      float * h_B, 
+                                      float * h_C_gpu, 
+                                      const unsigned int M,
+                                      const unsigned int N,
+                                      const unsigned int K)
+{
+  // kernel options: 
+  // - ['matrix_mul_transpose'] 
+  engine_compute (t, "matrix_mul_transpose");
+  const size_t TSM = 64;
+  const size_t TSN = 64;
+  const size_t WPTN = 1;
+  const size_t global[2] = {M, N/WPTN};
+  const size_t local[2] = {TSM, TSN/WPTN};
+  matrix_mul_gpu (t, global, local, h_A, h_B, h_C_gpu, M, N, K);
+}
+
+
 int main (void)
 {
   unsigned int M = 32*2;
@@ -59,6 +78,7 @@ int main (void)
 
   double tic_gpu = wtime();
   matrix_mul_gpu_set1 (t, h_A, h_B, h_C_gpu, M, N, K);
+  // matrix_mul_gpu_set2 (t, h_A, h_B, h_C_gpu, M, N, K);
   double toc_gpu = wtime() - tic_gpu;
 
   eval_results (h_C_cpu, h_C_gpu, M*N);
