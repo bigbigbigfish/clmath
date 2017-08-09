@@ -26,9 +26,15 @@ int main (void)
   engine * t = (engine*)malloc(sizeof(engine));
   char * kernel_srcs = file_read ("clmath/src/clmath/kernels/matrix.cl");
   engine_init (t, kernel_srcs);
-  engine_compute (t, "matrix_mul");
+  engine_compute (t, "matrix_mul_register");
+  const size_t TS = 32;
+  // if matrix_mul, matrix_mul_shared, WPT = 1;
+  // elif matrix_mul_register, WPT = 8;
+  const size_t WPT = 8;                     
+  const size_t global[2] = {M, N/WPT};
+  const size_t local[2] = {TS, TS/WPT};
   double tic_gpu = wtime();
-  matrix_mul_gpu (t, h_A, h_B, h_C_gpu, M, N, K);
+  matrix_mul_gpu (t, global, local, h_A, h_B, h_C_gpu, M, N, K);
   double toc_gpu = wtime() - tic_gpu;
 
   eval_results (h_C_cpu, h_C_gpu, M*N);

@@ -16,7 +16,7 @@ typedef struct
   cl_command_queue commands;
 
   cl_program program;
-  cl_kernel kernel;  
+  cl_kernel kernel;
 } engine;
 
 

@@ -1,11 +1,11 @@
 #include "clmath/utils/file_handler.h"
-#include "clmath/devices/cl_engines.h"
 #include "clmath/devices/cl_errors.h"
-
 #include "clmath/hosts/matrix_gpu.h"
 
 
 void matrix_mul_gpu (engine * t,
+                     const size_t global,
+                     const size_t local,
                      float * h_A,
                      float * h_B,
                      float * h_C,
@@ -25,8 +25,7 @@ void matrix_mul_gpu (engine * t,
   d_C = clCreateBuffer (t->context, CL_MEM_WRITE_ONLY, sizeof(float)*M*N, h_C, &status);
   checkError (status, "Creating buffer d_C");
 
-  const size_t global[2] = {M, N};
-  const size_t local[2] = {32, 32};
+
   for (int i = 0; i < M*N; ++i)
   {
     status = clSetKernelArg (t->kernel, 0, sizeof(cl_mem), &d_A);
