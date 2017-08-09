@@ -2,6 +2,8 @@
 #define WPT (8)
 #define RTS (4)
 
+
+// matrix_mul_vector
 #define WIDTH 4
 #if WIDTH == 1
   typedef float floatX;
@@ -11,6 +13,18 @@
   typedef float4 floatX;
 #endif
 
+// matrix_mul_transpose
+#define TSM 64                           // the tile-size in dimension M
+#define TSN 64                           // the tile-size in dimension N
+#define TSK 32                           // the tile-size in dimension K
+#define WPTN 8                           // the work-per-thread in dimension N
+#define RTSM 8                           // the reduced tile-size in dimension M
+#define RTSN (TSN/WPTN)                  // the reduced tile-size in dimension N
+#define LPT ((TSK*TSM)/(RTSM*RTSN))      // the loads-per-thread for a tile
+#define TRANSPOSEX 8
+#define TRANSPOSEY 4
+
+/* --------------------------------------------------------------------------------------------- */
 
 __kernel void matrix_mul_global (const __global float * d_A,
                                 const __global float * d_B,
@@ -31,6 +45,8 @@ __kernel void matrix_mul_global (const __global float * d_A,
   d_C[global_col*M + global_row] = acc;
 }
 
+
+/* --------------------------------------------------------------------------------------------- */
 
 __kernel void matrix_mul_shared (const __global float * d_A,
                                  const __global float * d_B,
@@ -79,6 +95,7 @@ __kernel void matrix_mul_shared (const __global float * d_A,
   d_C[global_col*M + global_row] = acc;
 }
 
+/* --------------------------------------------------------------------------------------------- */
 
 /*
  * TS = WPT * RTS
@@ -233,3 +250,110 @@ __kernel void matrix_mul_vector (const __global floatX * d_A,
   // store the final results in C
   d_C[global_col*(M/WIDTH) + global_row] = acc;
 }
+
+/* --------------------------------------------------------------------------------------------- */
+
+
+/*
+ * Simple transpose kernel for a P * Q matrix
+ */
+__kernel void transpose (const __global float * input,
+                         __global float * output,
+                         const int P,
+                         const int Q)
+{
+  // thread identifiers
+  const int tx = get_local_id (0);
+  const int ty = get_local_id (1);
+  const int ID0 = get_group_id(0) * TRANSPOSEX + tx;  // 0..P
+  const int ID1 = get_group_id(1) * TRANSPOSEY + ty;  // 0..Q
+  
+  // set-up the local memory for shuffling
+  __local float buffer[TRANSPOSEX][TRANSPOSEY];
+
+  // swap the x and y coordinates to perform the rotation (coalesed)
+  if (ID0 < P && ID1 < Q)
+  {
+    buffer[ty][tx] = input[ID1*P + ID0];
+  }
+
+  // synchronise all threads
+  barrier(CLK_LOCAL_MEM_FENCE);
+
+  // we don't have to swap the x and y thread indices here,
+  // because that's already done in the local memory
+  const int newID0 = get_group_id(1) * TRANSPOSEY + tx;
+  const int newID1 = get_group_id(0) * TRANSPOSEX + ty;
+
+  // store the tranposed result (coalesced)
+  if (newID0 < Q && newID1 < P)
+  {
+    output[newID1*Q + newID0] = buffer[tx][ty];
+  }
+}
+
+
+/*
+ * Pre-tranpose the input matrix B and use rectangular tiles
+ */
+__kernel void matrix_mul_transpose (const __global float * d_A,
+                                    const __global float * d_B,
+                                    __global float * d_C,
+                                    const unsigned int M,
+                                    const unsigned int N,
+                                    const unsigned int K)
+{
+  // thread identifiers
+  const int local_row = get_local_id (0);
+  const int local_col = get_local_id (1);
+  const int global_row = TSM * get_group_id (0) + local_row;  // 0..M
+  const int global_col = TSM * get_group_id (1) + local_col;  // 0..N
+
+  // local memory to fit a tile of A and B
+  __local float d_A_sub[TSK][TSM];
+  __local float d_B_sub[TSN][TSK];
+
+  // initialize the accumulation registers
+  float acc[WPTN];
+  for (int w = 0; w < WPTN; ++w)
+  {
+    acc[w] = 0.0f;
+  }
+
+  // loop over all tiles
+  int n_tiles = K/TSK;
+  for (int t = 0; t < n_tiles; ++t)
+  {
+    // load one tile of A and B into local memory
+    for (int l = 0; l < LPT; ++l)
+    {
+      int tiled_index = TSK * t + local_col + l * RTSN;
+      int index_A = tiled_index * M + TSM * get_group_id (0) + local_row;
+      int index_B = tiled_index * N + TSN * get_group_id (1) + local_row;
+      d_A_sub[local_col + l * RTSN][local_row] = d_A[index_A];
+      d_B_sub[local_row][local_col + l * RTSN] = d_B[index_B];
+    }
+
+    // synchronize to make sure the tile is loaded
+    barrier(CLK_LOCAL_MEM_FENCE);
+
+    // perform the computation for a single tile
+    for (int k = 0; k < TSK; ++k)
+    {
+      for (int w = 0; w < WPTN; ++w)
+      {
+        acc[w] += d_A_sub[k][local_row] * d_B_sub[local_col + w * RTSN][k];
+      }
+    }
+
+    // synchronize before loading the next tile
+    barrier(CLK_LOCAL_MEM_FENCE);
+  }
+
+  // store the final results in C
+  for (int w = 0; w < WPTN; ++w)
+  {
+    d_C[(global_col + w * RTSN) * M + global_row] = acc[w];
+  }
+}
+

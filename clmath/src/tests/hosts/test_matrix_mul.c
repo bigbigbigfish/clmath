@@ -32,12 +32,16 @@ int main (void)
   // kernel options: 
   // - ['matrix_mul_global', 
   //    'matrix_mul_shared', 
-  //    'matrix_mul_register']
+  //    'matrix_mul_register',
+  //    'matrix_mul_vector']
   engine_compute (t, "matrix_mul_vector");
+  // if matrix_mul_global, matrix_mul_shared, matrix_mul_register, TS = 32
   const size_t TS = 32;
-  // if matrix_mul_global, matrix_mul_shared, WPT = 1;
+  // if matrix_mul_global, matrix_mul_shared, matrix_mul_vector, WPT = 1;
   // elif matrix_mul_register, WPT = 8;
   const size_t WPT = 1;
+  // if matrix_mul_global, matrix_mul_shared, matrix_mul_register, WIDTH = 1
+  // elif matrix_mul_vector, WIDTH = 4;
   const size_t WIDTH = 4;                     
   const size_t global[2] = {M/WIDTH, N/WPT};
   const size_t local[2] = {TS/WIDTH, TS/WPT};
