@@ -5,7 +5,8 @@
 #include "clmath/hosts/matrix_gpu.h"
 
 
-void matrix_mul_gpu (float * h_A,
+void matrix_mul_gpu (engine * t,
+                     float * h_A,
                      float * h_B,
                      float * h_C,
                      const unsigned int M,
@@ -16,11 +17,6 @@ void matrix_mul_gpu (float * h_A,
   cl_mem d_A;
   cl_mem d_B;
   cl_mem d_C;
-
-  engine * t = (engine*)malloc(sizeof(engine));
-  char * kernel_srcs = file_read ("clmath/src/clmath/kernels/matrix.cl");
-  engine_init (t, kernel_srcs);
-  engine_compute (t, "matrix_mul");
 
   d_A = clCreateBuffer (t->context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float)*M*K, h_A, &status);
   checkError (status, "Creating buffer d_A");
