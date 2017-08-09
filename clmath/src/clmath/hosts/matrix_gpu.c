@@ -1,4 +1,3 @@
-#include "clmath/utils/file_handler.h"
 #include "clmath/devices/cl_errors.h"
 #include "clmath/hosts/matrix_gpu.h"
 
@@ -48,5 +47,4 @@ void matrix_mul_gpu (engine * t,
   clReleaseMemObject (d_A);
   clReleaseMemObject (d_B);
   clReleaseMemObject (d_C);
-  engine_cleanup (t);
 }
