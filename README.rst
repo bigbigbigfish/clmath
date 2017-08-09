@@ -27,3 +27,8 @@ Compiling
 
     $ make all
 
+==============================================================================
+References
+==============================================================================
+
+- [Tutorial: OpenCL SGEMM tuning for Kepler](https://cnugteren.github.io/tutorial/pages/page1.html)
