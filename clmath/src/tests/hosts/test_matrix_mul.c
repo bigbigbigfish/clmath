@@ -24,11 +24,16 @@ int main (void)
 
 
   engine * t = (engine*)malloc(sizeof(engine));
-  char * kernel_srcs = file_read ("clmath/src/clmath/kernels/matrix.cl");
+  char * kernel_srcs = file_read ("clmath/src/clmath/kernels/matrix_mul.cl");
   engine_init (t, kernel_srcs);
+
+  // kernel options: 
+  // - ['matrix_mul_naive', 
+  //    'matrix_mul_shared', 
+  //    'matrix_mul_register']
   engine_compute (t, "matrix_mul_register");
   const size_t TS = 32;
-  // if matrix_mul, matrix_mul_shared, WPT = 1;
+  // if matrix_mul_naive, matrix_mul_shared, WPT = 1;
   // elif matrix_mul_register, WPT = 8;
   const size_t WPT = 8;                     
   const size_t global[2] = {M, N/WPT};

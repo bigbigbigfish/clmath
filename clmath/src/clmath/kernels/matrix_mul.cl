@@ -3,12 +3,12 @@
 #define RTS (4)
 
 
-__kernel void matrix_mul (const __global float * d_A,
-                          const __global float * d_B,
-                          __global float * d_C,
-                          const unsigned int M,
-                          const unsigned int N,
-                          const unsigned int K)
+__kernel void matrix_mul_naive (const __global float * d_A,
+                                const __global float * d_B,
+                                __global float * d_C,
+                                const unsigned int M,
+                                const unsigned int N,
+                                const unsigned int K)
 {
   // thread identifiers
   const int global_row = get_global_id (0);
@@ -71,6 +71,16 @@ __kernel void matrix_mul_shared (const __global float * d_A,
 }
 
 
+/*
+ * TS = WPT * RTS
+ * - TS: number of tiles
+ * - WPT: x elements per thread
+ * - RTS: number of sub-tiles
+ * 
+ * For instance:
+ * - TS: 32, WPT: 8, RTS: 4
+ * - TS: 32, WPT: 16, RTS: 2
+ */
 __kernel void matrix_mul_register (const __global float * d_A,
                                    const __global float * d_B,
                                    __global float * d_C,
